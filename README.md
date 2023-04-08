@@ -1,6 +1,9 @@
 # LuckPermsGUI
 A Java re-write of the original skript LuckPermsGUI
 
+![image](https://user-images.githubusercontent.com/69056690/230737053-e218a959-d283-48b1-a3a3-1eb2f6142b4e.png)
+
+
 <details>
 <summary>Images</summary>
 <br>

@@ -1,0 +1,21 @@
+name: LuckPermsGUI
+version: '${version}'
+main: me.fuzzie.luckpermsgui.main
+api-version: 1.19
+commands:
+  rank:
+    description: 'opens the gui'
+    permission: lpgui.rank
+    permission-message: 'No Permission'
+  lpguireload:
+    description: 'reloads config'
+    permission: lpgui.reload
+    permission-message: 'No Permission'
+  track:
+    description: 'opens track gui'
+    permission: lpgui.track
+    permission-message: 'No Permission'
+  lpgui:
+    description: 'opens main menu'
+    permission: lpgui.use
+    permission-message: 'No Permission'

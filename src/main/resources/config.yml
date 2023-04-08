@@ -1,0 +1,37 @@
+
+# LuckPermsGUI
+
+# see https://github.com/fuzziejaxer/LuckPermsGUI-ReWrite/releases for other versions
+
+# notes for configuring:
+# keep your added ranks in the same order for each section otherwise it will not display as expected
+# rank-item is to be put inside single(or double) quotes
+
+ranks:
+  require-confirm: true
+  # rank-name is the luckperms group name
+  rank-name:
+    - 'owner'
+    - 'admin'
+  # rank-prefix is what will display in the GUI
+  rank-prefix:
+    - '&4Owner'
+    - '&cAdmin'
+  # rank-item is what item will be displayed for each rank in the GUI
+  rank-item:
+    - 'DIAMOND'
+    - 'DIRT'
+
+tracks:
+  require-confirm: true
+  track-name:
+    - 'staff'
+    - 'donatorRanks'
+  track-prefix:
+    - '&9Staff'
+    - '&5Donator Ranks'
+  track-item:
+    - 'NAME_TAG'
+    - 'DIAMOND'
+  promote-item: 'GREEN_WOOL'
+  demote-item: 'RED_WOOL'

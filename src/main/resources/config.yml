@@ -1,8 +1,6 @@
 
 # LuckPermsGUI
 
-# see https://github.com/fuzziejaxer/LuckPermsGUI-ReWrite/releases for other versions
-
 # notes for configuring:
 # keep your added ranks in the same order for each section otherwise it will not display as expected
 # rank-item is to be put inside single(or double) quotes

@@ -41,14 +41,41 @@ public class track implements CommandExecutor {
                     List<String> trackPrefix = main.getInstance().getConfig().getStringList("tracks.track-prefix");
                     List<String> trackItem = main.getInstance().getConfig().getStringList("tracks.track-item");
 
-
+                    // global exit button
+                    ItemStack exit = new ItemStack(Material.BARRIER);
+                    ItemMeta metaTwo = exit.getItemMeta();
+                    metaTwo.setDisplayName(ChatColor.RED + "Exit");
+                    exit.setItemMeta(metaTwo);
 
 
                     // create GUI
-                    ChestGui gui = new ChestGui(3, (ChatColor.GREEN + "Track" + ChatColor.DARK_GRAY + "Menu"));
+                    ChestGui gui = new ChestGui(4, (ChatColor.GREEN + "Track" + ChatColor.DARK_GRAY + "Menu"));
                     OutlinePane pane = new OutlinePane(0, 0, 9, 3);
 
+                    // footer for main track menu
 
+                    ItemStack trackbg = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
+                    ItemMeta Trackmeta = trackbg.getItemMeta();
+                    Trackmeta.setDisplayName(" ");
+                    trackbg.setItemMeta(Trackmeta);
+
+                    OutlinePane trackBackground = new OutlinePane(0, 3, 9, 1);
+                    trackBackground.addItem(new GuiItem(trackbg, event -> event.setCancelled(true)));
+                    trackBackground.setRepeat(true);
+                    trackBackground.setPriority(Pane.Priority.LOWEST);
+
+                    gui.addPane(trackBackground);
+
+                    // create exit button
+
+                    StaticPane footer2 = new StaticPane(0, 3, 9, 1);
+                    footer2.addItem(new GuiItem(exit, event ->
+                    {
+                        event.setCancelled(true);
+                        event.getWhoClicked().closeInventory();
+                    }), 4, 0);
+
+                    gui.addPane(footer2);
 
 
                     for (int i = 0; i < trackName.size(); i++) {
@@ -72,11 +99,8 @@ public class track implements CommandExecutor {
                         meta2.setDisplayName(" ");
                         bg.setItemMeta(meta2);
 
-                        // create exit button
-                        ItemStack exit = new ItemStack(Material.BARRIER);
-                        ItemMeta metaTwo = exit.getItemMeta();
-                        metaTwo.setDisplayName(ChatColor.RED + "Exit");
-                        exit.setItemMeta(metaTwo);
+
+
 
                         OutlinePane background = new OutlinePane(0, 0, 9, 3);
                         background.addItem(new GuiItem(bg, event -> event.setCancelled(true)));

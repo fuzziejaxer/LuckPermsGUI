@@ -64,7 +64,11 @@ public class rank implements CommandExecutor {
                         rankPrefixArray[i] = (ChatColor.translateAlternateColorCodes('&', rankPrefix.get(i)));
                     }
 
-
+                    // back button
+                    ItemStack backItem = new ItemStack(Material.getMaterial(main.getInstance().getConfig().getString("global.back-item")));
+                    ItemMeta backMeta = backItem.getItemMeta();
+                    backMeta.setDisplayName(ChatColor.RED + "Back");
+                    backItem.setItemMeta(backMeta);
 
 
                     for (int i = 0; i < rankNameArray.length; i++) {
@@ -99,6 +103,8 @@ public class rank implements CommandExecutor {
                         metaDeny.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&c&lDeny"));
                         deny.setItemMeta(metaDeny);
 
+
+
                         StaticPane confirmPane = new StaticPane(0, 0, 9, 1);
 
 
@@ -116,6 +122,13 @@ public class rank implements CommandExecutor {
                             Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + target.getName() + " parent set " + currentRankName);
                             event.getWhoClicked().closeInventory();
                         }), 6, 0);
+
+                        GuiItem backConfirm = new GuiItem(backItem, event -> {
+                            event.setCancelled(true);
+                            player.performCommand("rank " + target.getName());
+                        });
+
+                        confirmPane.addItem(backConfirm, 0, 0);
 
 
                         confirm.addPane(confirmPane);
@@ -180,6 +193,15 @@ public class rank implements CommandExecutor {
                         event.setCancelled(true);
                         event.getWhoClicked().closeInventory();
                     }), 4, 0);
+
+
+
+                    GuiItem back = new GuiItem(backItem, event -> {
+                        event.setCancelled(true);
+                        player.performCommand("lpgui " + target.getName());
+                    });
+
+                    footer.addItem(back, 0, 0);
 
                     gui.addPane(footer);
 

@@ -75,6 +75,21 @@ public class track implements CommandExecutor {
                         event.getWhoClicked().closeInventory();
                     }), 4, 0);
 
+
+
+                    // back button
+                    ItemStack backItem = new ItemStack(Material.getMaterial(main.getInstance().getConfig().getString("global.back-item")));
+                    ItemMeta backMeta = backItem.getItemMeta();
+                    backMeta.setDisplayName(ChatColor.RED + "Back");
+                    backItem.setItemMeta(backMeta);
+
+                    GuiItem back = new GuiItem(backItem, event -> {
+                        event.setCancelled(true);
+                        p.performCommand("lpgui " + target.getName());
+                    });
+
+                    footer2.addItem(back, 0, 0);
+
                     gui.addPane(footer2);
 
 
@@ -154,6 +169,13 @@ public class track implements CommandExecutor {
                             event.getWhoClicked().closeInventory();
                         }), 6, 0);
 
+                        GuiItem backConfirm = new GuiItem(backItem, event -> {
+                            event.setCancelled(true);
+                            p.performCommand("track " + target.getName());
+                        });
+
+                        confirmPane.addItem(backConfirm, 0, 0);
+
                         confirm.addPane(confirmPane);
 
 
@@ -216,6 +238,13 @@ public class track implements CommandExecutor {
                             event.setCancelled(true);
                             event.getWhoClicked().closeInventory();
                         }), 4, 0);
+
+                        GuiItem back2 = new GuiItem(backItem, event -> {
+                            event.setCancelled(true);
+                            p.performCommand("track " + target.getName());
+                        });
+
+                        footer.addItem(back2, 0, 0);
 
                         clickedGui.addPane(footer);
 

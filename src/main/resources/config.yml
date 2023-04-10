@@ -2,8 +2,10 @@
 # LuckPermsGUI
 
 # notes for configuring:
-# keep your added ranks in the same order for each section otherwise it will not display as expected
-# rank-item is to be put inside single(or double) quotes
+# keep your added ranks & tracks in the same order for each section otherwise it will not display as expected
+# rank-item & track-item is to be put inside single(or double) quotes
+global:
+  back-item: 'ARROW'
 
 ranks:
   require-confirm: true

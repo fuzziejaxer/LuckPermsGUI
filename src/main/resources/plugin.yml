@@ -19,3 +19,4 @@ commands:
     description: 'opens main menu'
     permission: lpgui.use
     permission-message: 'No Permission'
+    aliases: ['lpg']

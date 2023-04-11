@@ -93,24 +93,15 @@ public final class main extends JavaPlugin {
                     gui.addPane(pane);
 
 
-                    // create background item
-                    ItemStack bg = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
-                    ItemMeta meta = bg.getItemMeta();
-                    meta.setDisplayName(" ");
-                    bg.setItemMeta(meta);
-
                     // create exit button
                     ItemStack exit = new ItemStack(Material.BARRIER);
                     ItemMeta metaTwo = exit.getItemMeta();
                     metaTwo.setDisplayName(ChatColor.RED + "Exit");
                     exit.setItemMeta(metaTwo);
 
-                    OutlinePane background = new OutlinePane(0, 0, 9, 5);
-                    background.addItem(new GuiItem(bg, event -> event.setCancelled(true)));
-                    background.setRepeat(true);
-                    background.setPriority(Pane.Priority.LOWEST);
-
+                    OutlinePane background = getBackground(0, 0, 9, 5);
                     gui.addPane(background);
+
 
                     StaticPane footer = new StaticPane(0, 4, 9, 1);
                     footer.addItem(new GuiItem(exit, event ->
@@ -133,6 +124,21 @@ public final class main extends JavaPlugin {
 
         }
         return true;
+    }
+
+    public OutlinePane getBackground(int x, int y, int length, int height) {
+        OutlinePane background = new OutlinePane(x, y, length, height);
+
+        ItemStack bg = new ItemStack(Material.getMaterial(getConfig().getString("global.background-item")));
+        ItemMeta meta = bg.getItemMeta();
+        meta.setDisplayName(" ");
+        bg.setItemMeta(meta);
+
+        background.addItem(new GuiItem(bg, event -> event.setCancelled(true)));
+        background.setRepeat(true);
+        background.setPriority(Pane.Priority.LOWEST);
+
+        return background;
     }
 
 

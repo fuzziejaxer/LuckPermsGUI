@@ -3,7 +3,6 @@ package me.fuzzie.luckpermsgui.commands;
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
-import com.github.stefvanschie.inventoryframework.pane.Pane;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 import me.fuzzie.luckpermsgui.main;
 import org.bukkit.Bukkit;
@@ -79,17 +78,7 @@ public class rank implements CommandExecutor {
                         ChestGui confirm = new ChestGui(1, (ChatColor.GREEN + "Confirm:"));
 
 
-                        // create background item
-                        ItemStack bgItem = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
-                        ItemMeta BGmeta = bgItem.getItemMeta();
-                        BGmeta.setDisplayName(" ");
-                        bgItem.setItemMeta(BGmeta);
-
-                        OutlinePane background = new OutlinePane(0, 0, 9, 1);
-                        background.addItem(new GuiItem(bgItem, event -> event.setCancelled(true)));
-                        background.setRepeat(true);
-                        background.setPriority(Pane.Priority.LOWEST);
-
+                        OutlinePane background = main.getInstance().getBackground(0, 0, 9, 1);
                         confirm.addPane(background);
 
                         // create buttons
@@ -103,13 +92,7 @@ public class rank implements CommandExecutor {
                         metaDeny.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&c&lDeny"));
                         deny.setItemMeta(metaDeny);
 
-
-
                         StaticPane confirmPane = new StaticPane(0, 0, 9, 1);
-
-
-
-
                         confirmPane.addItem(new GuiItem(deny, event ->
                         {
                             event.setCancelled(true);
@@ -168,23 +151,13 @@ public class rank implements CommandExecutor {
                     }
                     gui.addPane(pane);
 
-                    // create background item
-                    ItemStack bg = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
-                    ItemMeta meta = bg.getItemMeta();
-                    meta.setDisplayName(" ");
-                    bg.setItemMeta(meta);
-
                     // create exit button
                     ItemStack exit = new ItemStack(Material.BARRIER);
                     ItemMeta metaTwo = exit.getItemMeta();
                     metaTwo.setDisplayName(ChatColor.RED + "Exit");
                     exit.setItemMeta(metaTwo);
 
-                    OutlinePane background = new OutlinePane(0, 4, 9, 1);
-                    background.addItem(new GuiItem(bg, event -> event.setCancelled(true)));
-                    background.setRepeat(true);
-                    background.setPriority(Pane.Priority.LOWEST);
-
+                    OutlinePane background = main.getInstance().getBackground(0, 4, 9, 1);
                     gui.addPane(background);
 
                     StaticPane footer = new StaticPane(0, 4, 9, 1);

@@ -3,7 +3,6 @@ package me.fuzzie.luckpermsgui.commands;
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
-import com.github.stefvanschie.inventoryframework.pane.Pane;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 import me.fuzzie.luckpermsgui.main;
 import org.bukkit.Bukkit;
@@ -54,16 +53,8 @@ public class track implements CommandExecutor {
 
                     // footer for main track menu
 
-                    ItemStack trackbg = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
-                    ItemMeta Trackmeta = trackbg.getItemMeta();
-                    Trackmeta.setDisplayName(" ");
-                    trackbg.setItemMeta(Trackmeta);
 
-                    OutlinePane trackBackground = new OutlinePane(0, 3, 9, 1);
-                    trackBackground.addItem(new GuiItem(trackbg, event -> event.setCancelled(true)));
-                    trackBackground.setRepeat(true);
-                    trackBackground.setPriority(Pane.Priority.LOWEST);
-
+                    OutlinePane trackBackground = main.getInstance().getBackground(0, 3, 9, 1);
                     gui.addPane(trackBackground);
 
                     // create exit button
@@ -108,20 +99,12 @@ public class track implements CommandExecutor {
 
                         // create specific GUI
                         ChestGui clickedGui = new ChestGui(3, (itemName + ChatColor.GRAY + " : Track Menu : " + ChatColor.YELLOW + target.getName()));
-                        // create background item
-                        ItemStack bg = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
-                        ItemMeta meta2 = bg.getItemMeta();
-                        meta2.setDisplayName(" ");
-                        bg.setItemMeta(meta2);
 
 
 
 
-                        OutlinePane background = new OutlinePane(0, 0, 9, 3);
-                        background.addItem(new GuiItem(bg, event -> event.setCancelled(true)));
-                        background.setRepeat(true);
-                        background.setPriority(Pane.Priority.LOWEST);
-
+                        // add background
+                        OutlinePane background = main.getInstance().getBackground(0, 0, 9, 3);
                         clickedGui.addPane(background);
 
 
@@ -130,17 +113,9 @@ public class track implements CommandExecutor {
                         // create confirmation menu
                         ChestGui confirm = new ChestGui(1, (ChatColor.GREEN + "Confirm:"));
 
-                        // create background item
-                        ItemStack bgItem = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
-                        ItemMeta BGmeta = bgItem.getItemMeta();
-                        BGmeta.setDisplayName(" ");
-                        bgItem.setItemMeta(BGmeta);
 
-                        OutlinePane backgroundConfirm = new OutlinePane(0, 0, 9, 1);
-                        backgroundConfirm.addItem(new GuiItem(bgItem, event -> event.setCancelled(true)));
-                        backgroundConfirm.setRepeat(true);
-                        backgroundConfirm.setPriority(Pane.Priority.LOWEST);
 
+                        OutlinePane backgroundConfirm = main.getInstance().getBackground(0, 0, 9, 1);
                         confirm.addPane(backgroundConfirm);
 
                         // create buttons

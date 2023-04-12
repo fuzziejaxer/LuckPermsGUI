@@ -28,7 +28,7 @@ public class track implements CommandExecutor {
 
 
         if (Sender instanceof Player) {
-            Player p = (Player) Sender;
+            Player player = (Player) Sender;
 
             if (args.length > 0) {
                 Player target = Bukkit.getPlayer(args[0]);
@@ -67,19 +67,7 @@ public class track implements CommandExecutor {
                     }), 4, 0);
 
 
-
-                    // back button
-                    ItemStack backItem = new ItemStack(Material.getMaterial(main.getInstance().getConfig().getString("global.back-item")));
-                    ItemMeta backMeta = backItem.getItemMeta();
-                    backMeta.setDisplayName(ChatColor.RED + "Back");
-                    backItem.setItemMeta(backMeta);
-
-                    GuiItem back = new GuiItem(backItem, event -> {
-                        event.setCancelled(true);
-                        p.performCommand("lpgui " + target.getName());
-                    });
-
-                    footer2.addItem(back, 0, 0);
+                    footer2.addItem(main.getInstance().backButton(player, "lpgui " + target.getName()), 0, 0);
 
                     gui.addPane(footer2);
 
@@ -109,51 +97,8 @@ public class track implements CommandExecutor {
 
 
 
-
-                        // create confirmation menu
-                        ChestGui confirm = new ChestGui(1, (ChatColor.GREEN + "Confirm:"));
-
-
-
-                        OutlinePane backgroundConfirm = main.getInstance().getBackground(0, 0, 9, 1);
-                        confirm.addPane(backgroundConfirm);
-
-                        // create buttons
-                        ItemStack confirmItem = new ItemStack(Material.GREEN_WOOL);
-                        ItemMeta metaConfirm = confirmItem.getItemMeta();
-                        metaConfirm.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&a&lConfirm"));
-                        confirmItem.setItemMeta(metaConfirm);
-
-                        ItemStack deny = new ItemStack(Material.RED_WOOL);
-                        ItemMeta metaDeny = deny.getItemMeta();
-                        metaDeny.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&c&lDeny"));
-                        deny.setItemMeta(metaDeny);
-
-                        StaticPane confirmPane = new StaticPane(0, 0, 9, 1);
-
-                        confirmPane.addItem(new GuiItem(deny, event ->
-                        {
-                            event.setCancelled(true);
-                            event.getWhoClicked().closeInventory();
-                        }), 2, 0);
-
-                        confirmPane.addItem(new GuiItem(confirmItem, event ->
-                        {
-                            event.setCancelled(true);
-                            Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + target.getName() + motion + currentTrack);
-                            event.getWhoClicked().closeInventory();
-                        }), 6, 0);
-
-                        GuiItem backConfirm = new GuiItem(backItem, event -> {
-                            event.setCancelled(true);
-                            p.performCommand("track " + target.getName());
-                        });
-
-                        confirmPane.addItem(backConfirm, 0, 0);
-
-                        confirm.addPane(confirmPane);
-
-
+                        // create confirm menu
+                        ChestGui confirm = main.getInstance().getConfirm(player, target, "track","lp user " + target.getName() + motion + currentTrack);
 
 
 
@@ -181,7 +126,7 @@ public class track implements CommandExecutor {
                             event.setCancelled(true);
                             if (main.getInstance().getConfig().getBoolean("tracks.require-confirm") == true) {
                                 motion = " demote ";
-                                confirm.show(p);
+                                confirm.show(player);
                             } else if (main.getInstance().getConfig().getBoolean("tracks.require-confirm") == false) {
                                 Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + target.getName() + " demote " + currentTrack);
                             }
@@ -193,7 +138,7 @@ public class track implements CommandExecutor {
                             event.setCancelled(true);
                             if (main.getInstance().getConfig().getBoolean("tracks.require-confirm") == true) {
                                 motion = " promote ";
-                                confirm.show(p);
+                                confirm.show(player);
                             } else if (main.getInstance().getConfig().getBoolean("tracks.require-confirm") == false) {
                                 Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + target.getName() + " promote " + currentTrack);
                             }
@@ -214,12 +159,9 @@ public class track implements CommandExecutor {
                             event.getWhoClicked().closeInventory();
                         }), 4, 0);
 
-                        GuiItem back2 = new GuiItem(backItem, event -> {
-                            event.setCancelled(true);
-                            p.performCommand("track " + target.getName());
-                        });
 
-                        footer.addItem(back2, 0, 0);
+
+                        footer.addItem(main.getInstance().backButton(player, "track " + target.getName()), 0, 0);
 
                         clickedGui.addPane(footer);
 
@@ -231,7 +173,7 @@ public class track implements CommandExecutor {
                         GuiItem guiItem = new GuiItem(item, event ->
                         {
                             event.setCancelled(true);
-                            clickedGui.show(p);
+                            clickedGui.show(player);
 
                         });
 
@@ -241,12 +183,12 @@ public class track implements CommandExecutor {
 
 
                     gui.addPane(pane);
-                    gui.show(p);
+                    gui.show(player);
                 } else {
-                    p.sendMessage(ChatColor.RED + "[!] " + ChatColor.WHITE + "please select an online player");
+                    player.sendMessage(ChatColor.RED + "[!] " + ChatColor.WHITE + "please select an online player");
                 }
             } else {
-                p.sendMessage(ChatColor.RED + "[!] " + ChatColor.WHITE + "please specify a player \n usage: " + ChatColor.GREEN + "/track <player>");
+                player.sendMessage(ChatColor.RED + "[!] " + ChatColor.WHITE + "please specify a player \n usage: " + ChatColor.GREEN + "/track <player>");
             }
 
 

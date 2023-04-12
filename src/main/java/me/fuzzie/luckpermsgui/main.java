@@ -141,6 +141,64 @@ public final class main extends JavaPlugin {
         return background;
     }
 
+    public GuiItem backButton(Player player, String cmd) {
+        ItemStack backItem = new ItemStack(Material.getMaterial(main.getInstance().getConfig().getString("global.back-item")));
+        ItemMeta backMeta = backItem.getItemMeta();
+        backMeta.setDisplayName(ChatColor.RED + "Back");
+        backItem.setItemMeta(backMeta);
+
+        GuiItem back = new GuiItem(backItem, event -> {
+            event.setCancelled(true);
+            player.performCommand(cmd);
+        });
+
+        return back;
+    }
+
+    //          getConfirm(player, target, ("lp user " + target.getName() + motion + currentTrack))
+
+
+    public ChestGui getConfirm(Player player, Player target, String backCmd, String cmd) {
+        ChestGui confirm = new ChestGui(1, (ChatColor.GREEN + "Confirm:"));
+
+        OutlinePane backgroundConfirm = main.getInstance().getBackground(0, 0, 9, 1);
+        confirm.addPane(backgroundConfirm);
+
+        // create buttons
+        ItemStack confirmItem = new ItemStack(Material.GREEN_WOOL);
+        ItemMeta metaConfirm = confirmItem.getItemMeta();
+        metaConfirm.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&a&lConfirm"));
+        confirmItem.setItemMeta(metaConfirm);
+
+        ItemStack deny = new ItemStack(Material.RED_WOOL);
+        ItemMeta metaDeny = deny.getItemMeta();
+        metaDeny.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&c&lDeny"));
+        deny.setItemMeta(metaDeny);
+
+        StaticPane confirmPane = new StaticPane(0, 0, 9, 1);
+
+        confirmPane.addItem(new GuiItem(deny, event ->
+        {
+            event.setCancelled(true);
+            event.getWhoClicked().closeInventory();
+        }), 2, 0);
+
+        confirmPane.addItem(new GuiItem(confirmItem, event ->
+        {
+            event.setCancelled(true);
+            Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), cmd);
+            event.getWhoClicked().closeInventory();
+        }), 6, 0);
+
+
+
+        confirmPane.addItem(main.getInstance().backButton(player, backCmd + " " + target.getName()), 0, 0);
+
+        confirm.addPane(confirmPane);
+
+        return confirm;
+    }
+
 
 
     public boolean lpguireload(CommandSender Sender, Command cmd, String label, String[] args) {

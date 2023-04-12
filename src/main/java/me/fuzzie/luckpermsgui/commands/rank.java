@@ -38,8 +38,6 @@ public class rank implements CommandExecutor {
                     OutlinePane pane = new OutlinePane(0, 0, 9, 4);
 
 
-
-
                     List<String> rankName = main.getInstance().getConfig().getStringList("ranks.rank-name");
 
                     List<String> rankPrefix = main.getInstance().getConfig().getStringList("ranks.rank-prefix");
@@ -47,79 +45,19 @@ public class rank implements CommandExecutor {
                     List<String> rankItem = main.getInstance().getConfig().getStringList("ranks.rank-item");
 
 
-                    // create arrays
-                    String[] rankNameArray = new String[rankName.size()];
-                    String[] rankPrefixArray = new String[rankPrefix.size()];
-
-
-
-                    // put the list data into the arrays
-                    for (int i = 0; i < rankNameArray.length; i++) {
-                        rankNameArray[i] = rankName.get(i);
-                    }
-
-                    // get coloured prefix
-                    for (int i = 0; i < rankPrefixArray.length; i++) {
-                        rankPrefixArray[i] = (ChatColor.translateAlternateColorCodes('&', rankPrefix.get(i)));
-                    }
-
-                    // back button
-                    ItemStack backItem = new ItemStack(Material.getMaterial(main.getInstance().getConfig().getString("global.back-item")));
-                    ItemMeta backMeta = backItem.getItemMeta();
-                    backMeta.setDisplayName(ChatColor.RED + "Back");
-                    backItem.setItemMeta(backMeta);
-
-
-                    for (int i = 0; i < rankNameArray.length; i++) {
+                    for (int i = 0; i < rankName.size(); i++) {
                         // get current rank name
-                        String currentRankName = rankNameArray[i];
+                        String currentRankName = rankName.get(i);
+
+
 
                         // create confirmation menu
-                        ChestGui confirm = new ChestGui(1, (ChatColor.GREEN + "Confirm:"));
-
-
-                        OutlinePane background = main.getInstance().getBackground(0, 0, 9, 1);
-                        confirm.addPane(background);
-
-                        // create buttons
-                        ItemStack confirmItem = new ItemStack(Material.GREEN_WOOL);
-                        ItemMeta metaConfirm = confirmItem.getItemMeta();
-                        metaConfirm.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&a&lConfirm"));
-                        confirmItem.setItemMeta(metaConfirm);
-
-                        ItemStack deny = new ItemStack(Material.RED_WOOL);
-                        ItemMeta metaDeny = deny.getItemMeta();
-                        metaDeny.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&c&lDeny"));
-                        deny.setItemMeta(metaDeny);
-
-                        StaticPane confirmPane = new StaticPane(0, 0, 9, 1);
-                        confirmPane.addItem(new GuiItem(deny, event ->
-                        {
-                            event.setCancelled(true);
-                            event.getWhoClicked().closeInventory();
-                        }), 2, 0);
-
-                        confirmPane.addItem(new GuiItem(confirmItem, event ->
-                        {
-                            event.setCancelled(true);
-                            Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + target.getName() + " parent set " + currentRankName);
-                            event.getWhoClicked().closeInventory();
-                        }), 6, 0);
-
-                        GuiItem backConfirm = new GuiItem(backItem, event -> {
-                            event.setCancelled(true);
-                            player.performCommand("rank " + target.getName());
-                        });
-
-                        confirmPane.addItem(backConfirm, 0, 0);
-
-
-                        confirm.addPane(confirmPane);
+                        ChestGui confirm = main.getInstance().getConfirm(player, target, "rank","lp user " + target.getName() + " parent set " + currentRankName);
 
 
                         // deal with items
                         ItemStack item = new ItemStack(Material.getMaterial(rankItem.get(i)));
-                        String ItemName = rankPrefixArray[i];
+                        String ItemName = (ChatColor.translateAlternateColorCodes('&', rankPrefix.get(i)));
 
                         ItemMeta meta = item.getItemMeta();
                         meta.setDisplayName(ItemName);
@@ -169,12 +107,7 @@ public class rank implements CommandExecutor {
 
 
 
-                    GuiItem back = new GuiItem(backItem, event -> {
-                        event.setCancelled(true);
-                        player.performCommand("lpgui " + target.getName());
-                    });
-
-                    footer.addItem(back, 0, 0);
+                    footer.addItem(main.getInstance().backButton(player, "lpgui " + target.getName()), 0, 0);
 
                     gui.addPane(footer);
 

@@ -20,3 +20,8 @@ commands:
     permission: lpgui.use
     permission-message: 'No Permission'
     aliases: ['lpg']
+  lpguisetup:
+    description: 'sets up ranks specified in config.yml'
+    permission: lpgui.setup
+    permission-message: 'No Permission'
+    aliases: ['lpgsetup']

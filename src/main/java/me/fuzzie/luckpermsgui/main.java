@@ -5,6 +5,7 @@ import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
 import com.github.stefvanschie.inventoryframework.pane.Pane;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
+import me.fuzzie.luckpermsgui.commands.lpguisetup;
 import me.fuzzie.luckpermsgui.commands.rank;
 import me.fuzzie.luckpermsgui.commands.track;
 import org.bukkit.Bukkit;
@@ -42,9 +43,11 @@ public final class main extends JavaPlugin {
         this.getCommand("lpguireload").setExecutor(this::lpguireload);
         this.getCommand("track").setExecutor(new track());
         this.getCommand("lpgui").setExecutor(this::onCommand);
+        this.getCommand("lpguisetup").setExecutor(new lpguisetup());
 
         plugin = this;
     }
+
 
     @Override
     public void onDisable() {

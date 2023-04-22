@@ -8,6 +8,8 @@
 global:
   back-item: 'ARROW'
   background-item: 'BLACK_STAINED_GLASS_PANE'
+  setup:
+    set-prefix: true
 
 ranks:
   require-confirm: true

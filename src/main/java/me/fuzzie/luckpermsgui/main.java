@@ -81,6 +81,18 @@ public final class main extends JavaPlugin {
                         player.performCommand("rank " + target.getName());
                     }), 3, 1);
 
+                    // create setup item
+                    ItemStack setup = new ItemStack(Material.BRICKS);
+                    ItemMeta setupMeta = setup.getItemMeta();
+                    setupMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&5Setup &8Menu"));
+                    setup.setItemMeta(setupMeta);
+
+                    pane.addItem(new GuiItem(setup, event ->
+                    {
+                        event.setCancelled(true);
+                        player.performCommand("lpguisetup");
+                    }), 4, 1);
+
                     // create track menu item
                     ItemStack track = new ItemStack(Material.LADDER);
                     ItemMeta trackMeta = track.getItemMeta();

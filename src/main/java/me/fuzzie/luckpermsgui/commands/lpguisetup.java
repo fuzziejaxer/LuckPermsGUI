@@ -82,6 +82,33 @@ public class lpguisetup implements CommandExecutor {
 
                 gui.addPane(footer);
 
+                StaticPane buttons = new StaticPane(0, 3, 9, 1);
+
+                ItemStack deny = new ItemStack(Material.RED_WOOL);
+                ItemMeta meta = deny.getItemMeta();
+                meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&c&lDeny"));
+                deny.setItemMeta(meta);
+
+                ItemStack confirm = new ItemStack(Material.GREEN_WOOL);
+                ItemMeta meta2 = confirm.getItemMeta();
+                meta2.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&a&lConfirm"));
+                confirm.setItemMeta(meta2);
+
+                buttons.addItem(new GuiItem(deny, event ->
+                {
+                    event.setCancelled(true);
+                    player.performCommand("lpgui " + player.getName());
+                }), 3, 0);
+
+                buttons.addItem(new GuiItem(confirm, event ->
+                {
+                    event.setCancelled(true);
+                    createGroups(rankName, rankPrefix);
+                    player.performCommand("rank " + player.getName());
+                }), 5, 0);
+
+                gui.addPane(buttons);
+
                 gui.show(player);
 
             }
@@ -100,7 +127,7 @@ public class lpguisetup implements CommandExecutor {
 
             Boolean setprefix = main.getInstance().getConfig().getBoolean("global.setup.set-prefix");
             if (setprefix != false) {
-                Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp group " + rankName.get(i) + " meta setprefix " + rankPrefix.get(i));
+                Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp group " + rankName.get(i) + " meta setprefix " + rankPrefix.get(i) + "&f");
             }
         }
     }

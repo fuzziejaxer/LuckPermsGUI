@@ -29,7 +29,7 @@ public class track implements CommandExecutor {
 
         if (Sender instanceof Player) {
             Player player = (Player) Sender;
-
+            String prefix = (ChatColor.translateAlternateColorCodes('&', main.getInstance().getConfig().getString("global.prefix")));
             if (args.length > 0) {
                 Player target = Bukkit.getPlayer(args[0]);
 
@@ -39,13 +39,6 @@ public class track implements CommandExecutor {
                     List<String> trackName = main.getInstance().getConfig().getStringList("tracks.track-name");
                     List<String> trackPrefix = main.getInstance().getConfig().getStringList("tracks.track-prefix");
                     List<String> trackItem = main.getInstance().getConfig().getStringList("tracks.track-item");
-
-                    // global exit button
-                    ItemStack exit = new ItemStack(Material.BARRIER);
-                    ItemMeta metaTwo = exit.getItemMeta();
-                    metaTwo.setDisplayName(ChatColor.RED + "Exit");
-                    exit.setItemMeta(metaTwo);
-
 
                     // create GUI
                     ChestGui gui = new ChestGui(4, (ChatColor.GREEN + "Track" + ChatColor.DARK_GRAY + "Menu"));
@@ -60,7 +53,7 @@ public class track implements CommandExecutor {
                     // create exit button
 
                     StaticPane footer2 = new StaticPane(0, 3, 9, 1);
-                    footer2.addItem(new GuiItem(exit, event ->
+                    footer2.addItem(new GuiItem(main.getInstance().getExit(), event ->
                     {
                         event.setCancelled(true);
                         event.getWhoClicked().closeInventory();
@@ -153,7 +146,7 @@ public class track implements CommandExecutor {
                         // create footer pane
 
                         StaticPane footer = new StaticPane(0, 2, 9, 1);
-                        footer.addItem(new GuiItem(exit, event ->
+                        footer.addItem(new GuiItem(main.getInstance().getExit(), event ->
                         {
                             event.setCancelled(true);
                             event.getWhoClicked().closeInventory();
@@ -185,10 +178,10 @@ public class track implements CommandExecutor {
                     gui.addPane(pane);
                     gui.show(player);
                 } else {
-                    player.sendMessage(ChatColor.RED + "[!] " + ChatColor.WHITE + "please select an online player");
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getInstance().getMessage().getString("offline-player")));
                 }
             } else {
-                player.sendMessage(ChatColor.RED + "[!] " + ChatColor.WHITE + "please specify a player \n usage: " + ChatColor.GREEN + "/track <player>");
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getInstance().getMessage().getString("non-player")));
             }
 
 

@@ -18,6 +18,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.List;
 
 public class lpguisetup implements CommandExecutor {
+
     @Override
     public boolean onCommand(CommandSender Sender, Command cmd, String label, String[] args) {
 
@@ -30,10 +31,10 @@ public class lpguisetup implements CommandExecutor {
             List<String> rankItem = main.getInstance().getConfig().getStringList("ranks.rank-item");
 
             if (rankName.size() != rankPrefix.size()) {
-                player.sendMessage(ChatColor.RED + "[!] " + ChatColor.WHITE + "please make sure the config.yml is correct");
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&',main.getInstance().getMessage().getString("setup.incorrect-config")));
             } else {
                 // create gui
-                ChestGui gui = new ChestGui(5, (ChatColor.RED + "Groups To Create: "));
+                ChestGui gui = new ChestGui(5, (ChatColor.translateAlternateColorCodes('&',main.getInstance().getMessage().getString("setup.menu-title"))));
                 OutlinePane pane = new OutlinePane(0, 0, 9, 4);
 
                 // loop through all items
@@ -42,13 +43,13 @@ public class lpguisetup implements CommandExecutor {
                     ItemStack item = new ItemStack(Material.getMaterial(rankItem.get(i)));
                     String ItemName = (ChatColor.translateAlternateColorCodes('&', rankPrefix.get(i)));
 
-                    if (main.getInstance().getConfig().getBoolean("global.setup.set-prefix") == true) {
+                    if (main.getInstance().getConfig().getBoolean("setup.set-prefix") == true) {
                         ItemMeta meta = item.getItemMeta();
-                        meta.setDisplayName(ChatColor.WHITE + "Group: " + rankName.get(i) + " will be created with the prefix: " + ItemName);
+                        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',main.getInstance().getMessage().getString("setup.create-with-prefix").replace("%group_name%", rankName.get(i)).replace("%prefix%", ItemName)));
                         item.setItemMeta(meta);
                     } else {
                         ItemMeta meta = item.getItemMeta();
-                        meta.setDisplayName(ChatColor.WHITE + "Group: " + rankName.get(i) + " will be created with no prefix");
+                        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',main.getInstance().getMessage().getString("setup.create-without-prefix").replace("%group_name%", rankName.get(i))));
                         item.setItemMeta(meta);
                     }
 
@@ -60,17 +61,12 @@ public class lpguisetup implements CommandExecutor {
                 }
                 gui.addPane(pane);
 
-                // create exit button
-                ItemStack exit = new ItemStack(Material.BARRIER);
-                ItemMeta metaTwo = exit.getItemMeta();
-                metaTwo.setDisplayName(ChatColor.RED + "Exit");
-                exit.setItemMeta(metaTwo);
-
                 OutlinePane background = main.getInstance().getBackground(0, 4, 9, 1);
                 gui.addPane(background);
 
+                // create exit button
                 StaticPane footer = new StaticPane(0, 4, 9, 1);
-                footer.addItem(new GuiItem(exit, event ->
+                footer.addItem(new GuiItem(main.getInstance().getExit(), event ->
                 {
                     event.setCancelled(true);
                     event.getWhoClicked().closeInventory();
@@ -113,9 +109,6 @@ public class lpguisetup implements CommandExecutor {
 
             }
 
-
-
-
         }
         return true;
     }
@@ -125,7 +118,7 @@ public class lpguisetup implements CommandExecutor {
             Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp creategroup " + rankName.get(i));
 
 
-            Boolean setprefix = main.getInstance().getConfig().getBoolean("global.setup.set-prefix");
+            Boolean setprefix = main.getInstance().getConfig().getBoolean("setup.set-prefix");
             if (setprefix != false) {
                 Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp group " + rankName.get(i) + " meta setprefix " + rankPrefix.get(i) + "&f");
             }

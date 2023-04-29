@@ -24,11 +24,12 @@ public class rank implements CommandExecutor {
 
         if (Sender instanceof Player) {
             Player player = (Player) Sender;
-
+            String prefix = (ChatColor.translateAlternateColorCodes('&', main.getInstance().getConfig().getString("global.prefix")));
             if (args.length > 0) {
                 Player target = Bukkit.getPlayer(args[0]);
 
                 if (target != null) {
+
 
 
                     ChestGui gui = new ChestGui(5, (ChatColor.RED + "Rank " + ChatColor.DARK_GRAY + "Menu"));
@@ -89,17 +90,12 @@ public class rank implements CommandExecutor {
                     }
                     gui.addPane(pane);
 
-                    // create exit button
-                    ItemStack exit = new ItemStack(Material.BARRIER);
-                    ItemMeta metaTwo = exit.getItemMeta();
-                    metaTwo.setDisplayName(ChatColor.RED + "Exit");
-                    exit.setItemMeta(metaTwo);
-
                     OutlinePane background = main.getInstance().getBackground(0, 4, 9, 1);
                     gui.addPane(background);
 
+                    // creates exit button
                     StaticPane footer = new StaticPane(0, 4, 9, 1);
-                    footer.addItem(new GuiItem(exit, event ->
+                    footer.addItem(new GuiItem(main.getInstance().getExit(), event ->
                     {
                         event.setCancelled(true);
                         event.getWhoClicked().closeInventory();
@@ -115,10 +111,10 @@ public class rank implements CommandExecutor {
 
 
                 } else {
-                    player.sendMessage(ChatColor.RED + "[!] " + ChatColor.WHITE + "please select an online player");
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getInstance().getMessage().getString("offline-player")));
                 }
             } else {
-                player.sendMessage(ChatColor.RED + "[!] " + ChatColor.WHITE + "please specify a player \n usage: " + ChatColor.GREEN + "/rank <player>");
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getInstance().getMessage().getString("non-player")));
             }
         }
         return true;

@@ -5,13 +5,19 @@
 # keep your added ranks & tracks in the same order for each section otherwise it will not display as expected
 # rank-item & track-item is to be put inside single(or double) quotes
 
+
 global:
+  prefix: '&7[&aLP&f GUI&7] &f'
   back-item: 'ARROW'
   background-item: 'BLACK_STAINED_GLASS_PANE'
-  setup:
-    set-prefix: true
+
+
+setup:
+  enabled: true
+  set-prefix: true
 
 ranks:
+  enabled: true
   require-confirm: true
   # rank-name is the luckperms group name
   rank-name:
@@ -27,6 +33,7 @@ ranks:
     - 'DIRT'
 
 tracks:
+  enabled: true
   require-confirm: true
   track-name:
     - 'staff'

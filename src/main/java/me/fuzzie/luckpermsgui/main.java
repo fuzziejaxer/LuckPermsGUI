@@ -25,25 +25,35 @@ import java.io.File;
 import java.io.IOException;
 
 
-
 public final class main extends JavaPlugin {
 
     private File customConfigFile;
     private FileConfiguration customConfig;
 
+
     private static main plugin;
 
     @Override
     public void onEnable() {
-        createCustomConfig();
         getConfig();
         Bukkit.getLogger().info(ChatColor.GREEN + "Enabled " + ChatColor.YELLOW + "LuckPermsGUI");
         this.saveDefaultConfig();
-        this.getCommand("rank").setExecutor(new rank());
         this.getCommand("lpguireload").setExecutor(this::lpguireload);
-        this.getCommand("track").setExecutor(new track());
         this.getCommand("lpgui").setExecutor(this::onCommand);
-        this.getCommand("lpguisetup").setExecutor(new lpguisetup());
+
+        if (getConfig().getBoolean("ranks.enabled") == true) {
+            this.getCommand("rank").setExecutor(new rank());
+        }
+        if(getConfig().getBoolean("tracks.enabled") == true) {
+            this.getCommand("track").setExecutor(new track());
+        }
+        if(getConfig().getBoolean("setup.enabled") == true){
+            this.getCommand("lpguisetup").setExecutor(new lpguisetup());
+        }
+
+        // creates messages.yml file
+        createCustomConfig();
+
 
         plugin = this;
     }
@@ -59,20 +69,20 @@ public final class main extends JavaPlugin {
 
         if (Sender instanceof Player) {
             Player player = (Player) Sender;
-
+            String prefix = (ChatColor.translateAlternateColorCodes('&', main.getInstance().getConfig().getString("global.prefix")));
             if (args.length > 0) {
                 Player target = Bukkit.getPlayer(args[0]);
 
                 if (target != null) {
 
-                    ChestGui gui = new ChestGui(5, (ChatColor.GREEN + "Luck" + ChatColor.GRAY + "Perms" + ChatColor.YELLOW + " GUI"));
+                    ChestGui gui = new ChestGui(5, (ChatColor.translateAlternateColorCodes('&', getMessage().getString("lpgui.menu-title"))));
 
                     StaticPane pane = new StaticPane(0, 0, 9, 4);
 
                     // create rank menu item
                     ItemStack rank = new ItemStack(Material.NAME_TAG);
                     ItemMeta rankMeta = rank.getItemMeta();
-                    rankMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&cRank &8Menu"));
+                    rankMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', getMessage().getString("lpgui.rank-button")));
                     rank.setItemMeta(rankMeta);
 
                     pane.addItem(new GuiItem(rank, event ->
@@ -84,7 +94,7 @@ public final class main extends JavaPlugin {
                     // create setup item
                     ItemStack setup = new ItemStack(Material.BRICKS);
                     ItemMeta setupMeta = setup.getItemMeta();
-                    setupMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&5Setup &8Menu"));
+                    setupMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', getMessage().getString("lpgui.setup-button")));
                     setup.setItemMeta(setupMeta);
 
                     pane.addItem(new GuiItem(setup, event ->
@@ -96,7 +106,7 @@ public final class main extends JavaPlugin {
                     // create track menu item
                     ItemStack track = new ItemStack(Material.LADDER);
                     ItemMeta trackMeta = track.getItemMeta();
-                    trackMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&aTrack &8Menu"));
+                    trackMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', getMessage().getString("lpgui.track-button")));
                     track.setItemMeta(trackMeta);
 
                     pane.addItem(new GuiItem(track, event ->
@@ -107,19 +117,12 @@ public final class main extends JavaPlugin {
 
                     gui.addPane(pane);
 
-
-                    // create exit button
-                    ItemStack exit = new ItemStack(Material.BARRIER);
-                    ItemMeta metaTwo = exit.getItemMeta();
-                    metaTwo.setDisplayName(ChatColor.RED + "Exit");
-                    exit.setItemMeta(metaTwo);
-
                     OutlinePane background = getBackground(0, 0, 9, 5);
                     gui.addPane(background);
 
 
                     StaticPane footer = new StaticPane(0, 4, 9, 1);
-                    footer.addItem(new GuiItem(exit, event ->
+                    footer.addItem(new GuiItem(getExit(), event ->
                     {
                         event.setCancelled(true);
                         event.getWhoClicked().closeInventory();
@@ -130,15 +133,24 @@ public final class main extends JavaPlugin {
                     gui.show(player);
 
                 } else {
-                    player.sendMessage(ChatColor.RED + "[!] " + ChatColor.WHITE + "please select an online player");
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', getMessage().getString("offline-player")));
                 }
             } else {
-                player.sendMessage(ChatColor.RED + "[!] " + ChatColor.WHITE + "please specify a player \n usage: " + ChatColor.GREEN + "/lpgui <player>");
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', getMessage().getString("non-player")));
             }
 
 
         }
         return true;
+    }
+
+    public ItemStack getExit() {
+        ItemStack exit = new ItemStack(Material.BARRIER);
+        ItemMeta meta = exit.getItemMeta();
+        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', getMessage().getString("exit-button")));
+        exit.setItemMeta(meta);
+
+        return exit;
     }
 
     public OutlinePane getBackground(int x, int y, int length, int height) {
@@ -159,7 +171,7 @@ public final class main extends JavaPlugin {
     public GuiItem backButton(Player player, String cmd) {
         ItemStack backItem = new ItemStack(Material.getMaterial(main.getInstance().getConfig().getString("global.back-item")));
         ItemMeta backMeta = backItem.getItemMeta();
-        backMeta.setDisplayName(ChatColor.RED + "Back");
+        backMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', getMessage().getString("back-button")));
         backItem.setItemMeta(backMeta);
 
         GuiItem back = new GuiItem(backItem, event -> {
@@ -170,11 +182,9 @@ public final class main extends JavaPlugin {
         return back;
     }
 
-    //          getConfirm(player, target, ("lp user " + target.getName() + motion + currentTrack))
-
 
     public ChestGui getConfirm(Player player, Player target, String backCmd, String cmd) {
-        ChestGui confirm = new ChestGui(1, (ChatColor.GREEN + "Confirm:"));
+        ChestGui confirm = new ChestGui(1, (ChatColor.translateAlternateColorCodes('&', getMessage().getString("confirm-menu.menu-title"))));
 
         OutlinePane backgroundConfirm = main.getInstance().getBackground(0, 0, 9, 1);
         confirm.addPane(backgroundConfirm);
@@ -182,12 +192,12 @@ public final class main extends JavaPlugin {
         // create buttons
         ItemStack confirmItem = new ItemStack(Material.GREEN_WOOL);
         ItemMeta metaConfirm = confirmItem.getItemMeta();
-        metaConfirm.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&a&lConfirm"));
+        metaConfirm.setDisplayName(ChatColor.translateAlternateColorCodes('&', getMessage().getString("confirm-menu.confirm-button")));
         confirmItem.setItemMeta(metaConfirm);
 
         ItemStack deny = new ItemStack(Material.RED_WOOL);
         ItemMeta metaDeny = deny.getItemMeta();
-        metaDeny.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&c&lDeny"));
+        metaDeny.setDisplayName(ChatColor.translateAlternateColorCodes('&', getMessage().getString("confirm-menu.deny-button")));
         deny.setItemMeta(metaDeny);
 
         StaticPane confirmPane = new StaticPane(0, 0, 9, 1);
@@ -221,30 +231,41 @@ public final class main extends JavaPlugin {
         if (Sender instanceof Player) {
             Player player = (Player) Sender;
             reloadConfig();
-            player.sendMessage("reloaded config");
+            String message = (ChatColor.translateAlternateColorCodes('&', getMessage().getString("reload-config")));
+            player.sendMessage(message);
         }
         return true;
     }
 
+    public FileConfiguration getMessage() {
+        return this.customConfig;
+    }
+
     private void createCustomConfig() {
-        customConfigFile = new File(getDataFolder(), "config.yml");
+        customConfigFile = new File(getDataFolder(), "messages.yml");
         if (!customConfigFile.exists()) {
             customConfigFile.getParentFile().mkdirs();
-            saveResource("config.yml", false);
+            saveResource("messages.yml", false);
         }
 
-        customConfig= new YamlConfiguration();
+        customConfig = new YamlConfiguration();
         try {
             customConfig.load(customConfigFile);
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
         }
-
+        /* User Edit:
+            Instead of the above Try/Catch, you can also use
+            YamlConfiguration.loadConfiguration(customConfigFile)
+        */
     }
+
+
 
     public static main getInstance(){
         return plugin;
     }
+
 
 
 }

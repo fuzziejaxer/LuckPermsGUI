@@ -69,7 +69,6 @@ public final class main extends JavaPlugin {
 
         if (Sender instanceof Player) {
             Player player = (Player) Sender;
-            String prefix = (ChatColor.translateAlternateColorCodes('&', main.getInstance().getConfig().getString("global.prefix")));
             if (args.length > 0) {
                 Player target = Bukkit.getPlayer(args[0]);
 
@@ -136,7 +135,64 @@ public final class main extends JavaPlugin {
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&', getMessage().getString("offline-player")));
                 }
             } else {
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&', getMessage().getString("non-player")));
+                Player target = player;
+
+                ChestGui gui = new ChestGui(5, (ChatColor.translateAlternateColorCodes('&', getMessage().getString("lpgui.menu-title"))));
+
+                StaticPane pane = new StaticPane(0, 0, 9, 4);
+
+                // create rank menu item
+                ItemStack rank = new ItemStack(Material.NAME_TAG);
+                ItemMeta rankMeta = rank.getItemMeta();
+                rankMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', getMessage().getString("lpgui.rank-button")));
+                rank.setItemMeta(rankMeta);
+
+                pane.addItem(new GuiItem(rank, event ->
+                {
+                    event.setCancelled(true);
+                    player.performCommand("rank " + target.getName());
+                }), 3, 1);
+
+                // create setup item
+                ItemStack setup = new ItemStack(Material.BRICKS);
+                ItemMeta setupMeta = setup.getItemMeta();
+                setupMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', getMessage().getString("lpgui.setup-button")));
+                setup.setItemMeta(setupMeta);
+
+                pane.addItem(new GuiItem(setup, event ->
+                {
+                    event.setCancelled(true);
+                    player.performCommand("lpguisetup");
+                }), 4, 1);
+
+                // create track menu item
+                ItemStack track = new ItemStack(Material.LADDER);
+                ItemMeta trackMeta = track.getItemMeta();
+                trackMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', getMessage().getString("lpgui.track-button")));
+                track.setItemMeta(trackMeta);
+
+                pane.addItem(new GuiItem(track, event ->
+                {
+                    event.setCancelled(true);
+                    player.performCommand("track " + target.getName());
+                }), 5, 1);
+
+                gui.addPane(pane);
+
+                OutlinePane background = getBackground(0, 0, 9, 5);
+                gui.addPane(background);
+
+
+                StaticPane footer = new StaticPane(0, 4, 9, 1);
+                footer.addItem(new GuiItem(getExit(), event ->
+                {
+                    event.setCancelled(true);
+                    event.getWhoClicked().closeInventory();
+                }), 4, 0);
+
+                gui.addPane(footer);
+
+                gui.show(player);
             }
 
 

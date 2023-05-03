@@ -2,7 +2,6 @@
 # LuckPermsGUI Messages
 
 offline-player: '&7[&aLP&f GUI&7]&c[!] &fplease select an online player'
-non-player: '&7[&aLP&f GUI&7]&c[!] &fplease specify a player usage: &a/lpgui <player>'
 reload-config: '&7[&aLP&f GUI&7] &freloaded config'
 exit-button: '&cExit'
 back-button: '&cBack'
@@ -23,3 +22,6 @@ setup:
   menu-title: '&cGroups To Create: '
   create-with-prefix: '&fGroup: %group_name% will be created with the prefix %prefix%'
   create-without-prefix: '&fGroup %group_name% will be created with no prefix'
+
+rank:
+  menu-title: '&cRank &8Menu'

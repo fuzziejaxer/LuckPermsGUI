@@ -19,8 +19,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class rank implements CommandExecutor {
+
+
+
     @Override
     public boolean onCommand(CommandSender Sender, Command cmd, String label, String[] args) {
+
+        List<String> rankName = main.getInstance().getConfig().getStringList("ranks.rank-name");
+
+        List<String> rankPrefix = main.getInstance().getConfig().getStringList("ranks.rank-prefix");
+
+        List<String> rankItem = main.getInstance().getConfig().getStringList("ranks.rank-item");
 
         if (Sender instanceof Player) {
             Player player = (Player) Sender;
@@ -28,16 +37,8 @@ public class rank implements CommandExecutor {
                 Player target = Bukkit.getPlayer(args[0]);
 
                 if (target != null) {
-                    ChestGui gui = new ChestGui(5, (ChatColor.translateAlternateColorCodes('&',main.getInstance().getMessage().getString("rank.menu-title"))));
+                    ChestGui gui = new ChestGui(5, (getChat(main.getInstance().getMessage().getString("rank.menu-title").replace("%player%", target.getName()))));
                     OutlinePane pane = new OutlinePane(0, 0, 9, 4);
-
-
-                    List<String> rankName = main.getInstance().getConfig().getStringList("ranks.rank-name");
-
-                    List<String> rankPrefix = main.getInstance().getConfig().getStringList("ranks.rank-prefix");
-
-                    List<String> rankItem = main.getInstance().getConfig().getStringList("ranks.rank-item");
-
 
                     for (int i = 0; i < rankName.size(); i++) {
                         // get current rank name
@@ -53,7 +54,7 @@ public class rank implements CommandExecutor {
                         ItemMeta meta = item.getItemMeta();
                         meta.setDisplayName(ItemName);
                         ArrayList<String> loreList = new ArrayList<String>();
-                        loreList.add(ChatColor.WHITE + "will set " + ChatColor.GREEN + target.getName() + ChatColor.WHITE + " to " + ItemName);
+                        loreList.add(getChat(main.getInstance().getMessage().getString("rank.item-lore").replace("%group_name%", rankName.get(i)).replace("%prefix%", ItemName).replace("%player%", target.getName())));
                         meta.setLore(loreList);
                         item.setItemMeta(meta);
 
@@ -91,21 +92,13 @@ public class rank implements CommandExecutor {
                     gui.show(player);
 
                 } else {
-                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getInstance().getMessage().getString("offline-player")));
+                    player.sendMessage(getChat(main.getInstance().getMessage().getString("offline-player")));
                 }
             } else {
                 Player target = player;
 
-                ChestGui gui = new ChestGui(5, (ChatColor.RED + "Rank " + ChatColor.DARK_GRAY + "Menu"));
-
+                ChestGui gui = new ChestGui(5, (getChat(main.getInstance().getMessage().getString("rank.menu-title").replace("%player%", target.getName()))));
                 OutlinePane pane = new OutlinePane(0, 0, 9, 4);
-
-                List<String> rankName = main.getInstance().getConfig().getStringList("ranks.rank-name");
-
-                List<String> rankPrefix = main.getInstance().getConfig().getStringList("ranks.rank-prefix");
-
-                List<String> rankItem = main.getInstance().getConfig().getStringList("ranks.rank-item");
-
 
                 for (int i = 0; i < rankName.size(); i++) {
                     // get current rank name
@@ -116,12 +109,12 @@ public class rank implements CommandExecutor {
 
                     // deal with items
                     ItemStack item = new ItemStack(Material.getMaterial(rankItem.get(i)));
-                    String ItemName = (ChatColor.translateAlternateColorCodes('&', rankPrefix.get(i)));
+                    String ItemName = getChat(rankPrefix.get(i));
 
                     ItemMeta meta = item.getItemMeta();
                     meta.setDisplayName(ItemName);
                     ArrayList<String> loreList = new ArrayList<String>();
-                    loreList.add(ChatColor.WHITE + "will set " + ChatColor.GREEN + target.getName() + ChatColor.WHITE + " to " + ItemName);
+                    loreList.add(getChat(main.getInstance().getMessage().getString("rank.item-lore").replace("%group_name%", rankName.get(i)).replace("%prefix%", ItemName).replace("%player%", target.getName())));
                     meta.setLore(loreList);
                     item.setItemMeta(meta);
 
@@ -157,8 +150,14 @@ public class rank implements CommandExecutor {
                 gui.addPane(footer);
 
                 gui.show(player);
+
             }
         }
         return true;
+    }
+
+    public String getChat(String text) {
+        String message = ChatColor.translateAlternateColorCodes('&',text);
+        return message;
     }
 }

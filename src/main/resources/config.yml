@@ -7,15 +7,11 @@
 
 
 global:
-  prefix: '&7[&aLP&f GUI&7] &f'
   back-item: 'ARROW'
   background-item: 'BLACK_STAINED_GLASS_PANE'
-
-
 setup:
   enabled: true
   set-prefix: true
-
 ranks:
   enabled: true
   require-confirm: true
@@ -31,16 +27,18 @@ ranks:
   rank-item:
     - 'DIAMOND'
     - 'DIRT'
-
 tracks:
   enabled: true
   require-confirm: true
+  # track-name is set as the name of the track // these are defaults feel free to remove
   track-name:
     - 'staff'
     - 'donatorRanks'
+  # track-prefix is what will show up when displayed
   track-prefix:
     - '&9Staff'
     - '&5Donator Ranks'
+  # track-item is the item that will be shown in the gui
   track-item:
     - 'NAME_TAG'
     - 'DIAMOND'

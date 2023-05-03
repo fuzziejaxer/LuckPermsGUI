@@ -24,4 +24,11 @@ setup:
   create-without-prefix: '&fGroup %group_name% will be created with no prefix'
 
 rank:
-  menu-title: '&cRank &8Menu'
+  menu-title: '&cRank &8Menu &7: &a%player%'
+  item-lore: '&fWill set &a%player% &fto %prefix%'
+
+track:
+  menu-title: '&aTrack &8Menu &7: &a%player%'
+  second-menu-title: '&f%track% &7: &aTrack &8Menu &7: &a%player%'
+  promote: '&a&lPromote'
+  demote: '&c&lDemote'

@@ -25,22 +25,20 @@ public class track implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender Sender, Command cmd, String label, String[] args) {
-
-
         if (Sender instanceof Player) {
             Player player = (Player) Sender;
+
+            // List<String> rankItem = getConfig().getStringList("ranks.rank-item");
+            List<String> trackName = main.getInstance().getConfig().getStringList("tracks.track-name");
+            List<String> trackPrefix = main.getInstance().getConfig().getStringList("tracks.track-prefix");
+            List<String> trackItem = main.getInstance().getConfig().getStringList("tracks.track-item");
             if (args.length > 0) {
                 Player target = Bukkit.getPlayer(args[0]);
 
                 if (target != null) {
 
-                    // List<String> rankItem = getConfig().getStringList("ranks.rank-item");
-                    List<String> trackName = main.getInstance().getConfig().getStringList("tracks.track-name");
-                    List<String> trackPrefix = main.getInstance().getConfig().getStringList("tracks.track-prefix");
-                    List<String> trackItem = main.getInstance().getConfig().getStringList("tracks.track-item");
-
                     // create GUI
-                    ChestGui gui = new ChestGui(4, (ChatColor.GREEN + "Track" + ChatColor.DARK_GRAY + "Menu"));
+                    ChestGui gui = new ChestGui(4, (getChat(main.getInstance().getMessage().getString("track.menu-title").replace("%player%", target.getName()))));
                     OutlinePane pane = new OutlinePane(0, 0, 9, 3);
 
                     // footer for main track menu
@@ -65,7 +63,7 @@ public class track implements CommandExecutor {
                         String currentTrack = trackName.get(i);
                         // create items in GUI
                         ItemStack item = new ItemStack(Material.getMaterial(trackItem.get(i)));
-                        String itemName = (ChatColor.translateAlternateColorCodes('&', trackPrefix.get(i)));
+                        String itemName = getChat(trackPrefix.get(i));
 
                         // set item meta
                         ItemMeta meta = item.getItemMeta();
@@ -73,7 +71,7 @@ public class track implements CommandExecutor {
                         item.setItemMeta(meta);
 
                         // create specific GUI
-                        ChestGui clickedGui = new ChestGui(3, (itemName + ChatColor.GRAY + " : Track Menu : " + ChatColor.YELLOW + target.getName()));
+                        ChestGui clickedGui = new ChestGui(3, (getChat(main.getInstance().getMessage().getString("track.second-menu-title").replace("%player%", target.getName().replace("%track%", itemName)))));
 
                         // add background
                         OutlinePane background = main.getInstance().getBackground(0, 0, 9, 3);
@@ -86,13 +84,13 @@ public class track implements CommandExecutor {
                         String promoteItem = main.getInstance().getConfig().getString("tracks.promote-item");
                         ItemStack promote = new ItemStack(Material.getMaterial(promoteItem));
                         ItemMeta metaPromote = promote.getItemMeta();
-                        metaPromote.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&a&lPromote"));
+                        metaPromote.setDisplayName(getChat(main.getInstance().getMessage().getString("track.promote")));
                         promote.setItemMeta(metaPromote);
 
                         String demoteItem = main.getInstance().getConfig().getString("tracks.demote-item");
                         ItemStack demote = new ItemStack(Material.getMaterial(demoteItem));
                         ItemMeta metaDemote = demote.getItemMeta();
-                        metaDemote.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&c&lDemote"));
+                        metaDemote.setDisplayName(getChat(main.getInstance().getMessage().getString("track.demote")));
                         demote.setItemMeta(metaDemote);
 
                         StaticPane body = new StaticPane(0,1, 9, 1);
@@ -143,31 +141,29 @@ public class track implements CommandExecutor {
                     gui.addPane(pane);
                     gui.show(player);
                 } else {
-                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', main.getInstance().getMessage().getString("offline-player")));
+                    player.sendMessage(getChat(main.getInstance().getMessage().getString("offline-player")));
                 }
             } else {
                 Player target = player;
 
-                // List<String> rankItem = getConfig().getStringList("ranks.rank-item");
-                List<String> trackName = main.getInstance().getConfig().getStringList("tracks.track-name");
-                List<String> trackPrefix = main.getInstance().getConfig().getStringList("tracks.track-prefix");
-                List<String> trackItem = main.getInstance().getConfig().getStringList("tracks.track-item");
-
                 // create GUI
-                ChestGui gui = new ChestGui(4, (ChatColor.GREEN + "Track" + ChatColor.DARK_GRAY + "Menu"));
+                ChestGui gui = new ChestGui(4, (getChat(main.getInstance().getMessage().getString("track.menu-title").replace("%player%", target.getName()))));
                 OutlinePane pane = new OutlinePane(0, 0, 9, 3);
 
                 // footer for main track menu
+
                 OutlinePane trackBackground = main.getInstance().getBackground(0, 3, 9, 1);
                 gui.addPane(trackBackground);
 
                 // create exit button
+
                 StaticPane footer2 = new StaticPane(0, 3, 9, 1);
                 footer2.addItem(new GuiItem(main.getInstance().getExit(), event ->
                 {
                     event.setCancelled(true);
                     event.getWhoClicked().closeInventory();
                 }), 4, 0);
+
                 footer2.addItem(main.getInstance().backButton(player, "lpgui " + target.getName()), 0, 0);
 
                 gui.addPane(footer2);
@@ -176,7 +172,7 @@ public class track implements CommandExecutor {
                     String currentTrack = trackName.get(i);
                     // create items in GUI
                     ItemStack item = new ItemStack(Material.getMaterial(trackItem.get(i)));
-                    String itemName = (ChatColor.translateAlternateColorCodes('&', trackPrefix.get(i)));
+                    String itemName = getChat(trackPrefix.get(i));
 
                     // set item meta
                     ItemMeta meta = item.getItemMeta();
@@ -184,7 +180,7 @@ public class track implements CommandExecutor {
                     item.setItemMeta(meta);
 
                     // create specific GUI
-                    ChestGui clickedGui = new ChestGui(3, (itemName + ChatColor.GRAY + " : Track Menu : " + ChatColor.YELLOW + target.getName()));
+                    ChestGui clickedGui = new ChestGui(3, (getChat(main.getInstance().getMessage().getString("track.second-menu-title").replace("%player%", target.getName()).replace("%track%", itemName))));
 
                     // add background
                     OutlinePane background = main.getInstance().getBackground(0, 0, 9, 3);
@@ -194,17 +190,16 @@ public class track implements CommandExecutor {
                     ChestGui confirm = main.getInstance().getConfirm(player, target, "track","lp user " + target.getName() + motion + currentTrack);
 
                     // create body pane
-
                     String promoteItem = main.getInstance().getConfig().getString("tracks.promote-item");
                     ItemStack promote = new ItemStack(Material.getMaterial(promoteItem));
                     ItemMeta metaPromote = promote.getItemMeta();
-                    metaPromote.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&a&lPromote"));
+                    metaPromote.setDisplayName(getChat(main.getInstance().getMessage().getString("track.promote")));
                     promote.setItemMeta(metaPromote);
 
                     String demoteItem = main.getInstance().getConfig().getString("tracks.demote-item");
                     ItemStack demote = new ItemStack(Material.getMaterial(demoteItem));
                     ItemMeta metaDemote = demote.getItemMeta();
-                    metaDemote.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&c&lDemote"));
+                    metaDemote.setDisplayName(getChat(main.getInstance().getMessage().getString("track.demote")));
                     demote.setItemMeta(metaDemote);
 
                     StaticPane body = new StaticPane(0,1, 9, 1);
@@ -238,7 +233,6 @@ public class track implements CommandExecutor {
                         event.setCancelled(true);
                         event.getWhoClicked().closeInventory();
                     }), 4, 0);
-
                     footer.addItem(main.getInstance().backButton(player, "track " + target.getName()), 0, 0);
 
                     clickedGui.addPane(footer);
@@ -250,20 +244,20 @@ public class track implements CommandExecutor {
                         clickedGui.show(player);
 
                     });
-
                     pane.addItem(guiItem);
                 }
 
                 gui.addPane(pane);
                 gui.show(player);
             }
-
-
         }
         return true;
     }
 
-
+    public String getChat(String text) {
+        String message = ChatColor.translateAlternateColorCodes('&',text);
+        return message;
+    }
 
 
 }

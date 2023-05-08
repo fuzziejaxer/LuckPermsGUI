@@ -26,6 +26,7 @@ setup:
 rank:
   menu-title: '&cRank &8Menu &7: &a%player%'
   item-lore: '&fWill set &a%player% &fto %prefix%'
+  chat-message: '&7[&aLP&f GUI&7] &fSet &a%player% &fto &a%group_name%'
 
 track:
   menu-title: '&aTrack &8Menu &7: &a%player%'

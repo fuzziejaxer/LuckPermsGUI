@@ -5,6 +5,9 @@ import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 import me.fuzzie.luckpermsgui.main;
+import net.luckperms.api.model.user.User;
+import net.luckperms.api.node.Node;
+import net.luckperms.api.node.types.InheritanceNode;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -35,6 +38,7 @@ public class rank implements CommandExecutor {
             Player player = (Player) Sender;
             if (args.length > 0) {
                 Player target = Bukkit.getPlayer(args[0]);
+                User user = main.getInstance().getLP().getUserManager().getUser(args[0]);
 
                 if (target != null) {
                     ChestGui gui = new ChestGui(5, (getChat(main.getInstance().getMessage().getString("rank.menu-title").replace("%player%", target.getName()))));
@@ -45,7 +49,7 @@ public class rank implements CommandExecutor {
                         String currentRankName = rankName.get(i);
 
                         // create confirmation menu
-                        ChestGui confirm = main.getInstance().getConfirm(player, target, "rank","lp user " + target.getName() + " parent set " + currentRankName);
+                        ChestGui confirm = getConfirm(player, user, "rank", rankName, i);
 
                         // deal with items
                         ItemStack item = new ItemStack(Material.getMaterial(rankItem.get(i)));
@@ -58,6 +62,7 @@ public class rank implements CommandExecutor {
                         meta.setLore(loreList);
                         item.setItemMeta(meta);
 
+                        int finalI = i;
                         GuiItem guiItem = new GuiItem(item, event ->
                         {
                             event.setCancelled(true);
@@ -65,7 +70,18 @@ public class rank implements CommandExecutor {
                             if (main.getInstance().getConfig().getBoolean("ranks.require-confirm") == true) {
                                 confirm.show(player);
                             } else if (main.getInstance().getConfig().getBoolean("ranks.require-confirm") == false) {
-                                Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + target.getName() + " parent set " + currentRankName);
+                                // remove current group
+                                String primaryGroup = user.getPrimaryGroup();
+                                user.data().remove(Node.builder("group." + primaryGroup).build());
+
+                                // set new group
+                                String groupname = rankName.get(finalI);
+                                InheritanceNode node = InheritanceNode.builder(groupname).build();
+                                user.data().add(node);
+
+                                main.getInstance().getLP().getUserManager().saveUser(user);
+
+                                player.sendMessage(getChat(main.getInstance().getMessage().getString("rank.chat-message").replace("%group_name%", rankName.get(finalI)).replace("%player%", user.getUsername())));
                             }
                         });
 
@@ -96,6 +112,7 @@ public class rank implements CommandExecutor {
                 }
             } else {
                 Player target = player;
+                User user = main.getInstance().getLP().getUserManager().getUser(target.getName());
 
                 ChestGui gui = new ChestGui(5, (getChat(main.getInstance().getMessage().getString("rank.menu-title").replace("%player%", target.getName()))));
                 OutlinePane pane = new OutlinePane(0, 0, 9, 4);
@@ -105,7 +122,7 @@ public class rank implements CommandExecutor {
                     String currentRankName = rankName.get(i);
 
                     // create confirmation menu
-                    ChestGui confirm = main.getInstance().getConfirm(player, target, "rank","lp user " + target.getName() + " parent set " + currentRankName);
+                    ChestGui confirm = getConfirm(player, user, "rank", rankName, i);
 
                     // deal with items
                     ItemStack item = new ItemStack(Material.getMaterial(rankItem.get(i)));
@@ -118,6 +135,7 @@ public class rank implements CommandExecutor {
                     meta.setLore(loreList);
                     item.setItemMeta(meta);
 
+                    int finalI = i;
                     GuiItem guiItem = new GuiItem(item, event ->
                     {
                         event.setCancelled(true);
@@ -125,7 +143,18 @@ public class rank implements CommandExecutor {
                         if (main.getInstance().getConfig().getBoolean("ranks.require-confirm") == true) {
                             confirm.show(player);
                         } else if (main.getInstance().getConfig().getBoolean("ranks.require-confirm") == false) {
-                            Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + target.getName() + " parent set " + currentRankName);
+                            // remove current group
+                            String primaryGroup = user.getPrimaryGroup();
+                            user.data().remove(Node.builder("group." + primaryGroup).build());
+
+                            // set new group
+                            String groupname = rankName.get(finalI);
+                            InheritanceNode node = InheritanceNode.builder(groupname).build();
+                            user.data().add(node);
+
+                            main.getInstance().getLP().getUserManager().saveUser(user);
+
+                            player.sendMessage(getChat(main.getInstance().getMessage().getString("rank.chat-message").replace("%group_name%", rankName.get(finalI)).replace("%player%", user.getUsername())));
                         }
                     });
 
@@ -155,6 +184,62 @@ public class rank implements CommandExecutor {
         }
         return true;
     }
+
+    public ChestGui getConfirm(Player player, User user, String backCmd, List<String> rankName, int i) {
+        ChestGui confirm = new ChestGui(1, (ChatColor.translateAlternateColorCodes('&', main.getInstance().getMessage().getString("confirm-menu.menu-title"))));
+
+        OutlinePane backgroundConfirm = main.getInstance().getBackground(0, 0, 9, 1);
+        confirm.addPane(backgroundConfirm);
+
+        // create buttons
+        ItemStack confirmItem = new ItemStack(Material.GREEN_WOOL);
+        ItemMeta metaConfirm = confirmItem.getItemMeta();
+        metaConfirm.setDisplayName(ChatColor.translateAlternateColorCodes('&', main.getInstance().getMessage().getString("confirm-menu.confirm-button")));
+        confirmItem.setItemMeta(metaConfirm);
+
+        ItemStack deny = new ItemStack(Material.RED_WOOL);
+        ItemMeta metaDeny = deny.getItemMeta();
+        metaDeny.setDisplayName(ChatColor.translateAlternateColorCodes('&', main.getInstance().getMessage().getString("confirm-menu.deny-button")));
+        deny.setItemMeta(metaDeny);
+
+        StaticPane confirmPane = new StaticPane(0, 0, 9, 1);
+
+        confirmPane.addItem(new GuiItem(deny, event ->
+        {
+            event.setCancelled(true);
+            event.getWhoClicked().closeInventory();
+        }), 2, 0);
+
+        confirmPane.addItem(new GuiItem(confirmItem, event ->
+        {
+            event.setCancelled(true);
+                // remove current group
+                String primaryGroup = user.getPrimaryGroup();
+                user.data().remove(Node.builder("group." + primaryGroup).build());
+
+                // set new group
+                String groupname = rankName.get(i);
+                InheritanceNode node = InheritanceNode.builder(groupname).build();
+                user.data().add(node);
+
+                main.getInstance().getLP().getUserManager().saveUser(user);
+
+                player.sendMessage(getChat(main.getInstance().getMessage().getString("rank.chat-message").replace("%group_name%", rankName.get(i)).replace("%player%", user.getUsername())));
+
+                event.getWhoClicked().closeInventory();
+
+        }), 6, 0);
+
+
+
+        confirmPane.addItem(main.getInstance().backButton(player, backCmd + " " + user.getUsername()), 0, 0);
+
+        confirm.addPane(confirmPane);
+
+        return confirm;
+    }
+
+
 
     public String getChat(String text) {
         String message = ChatColor.translateAlternateColorCodes('&',text);

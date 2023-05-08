@@ -2,6 +2,8 @@ name: LuckPermsGUI
 version: '${version}'
 main: me.fuzzie.luckpermsgui.main
 api-version: 1.19
+depend:
+  - LuckPerms
 commands:
   rank:
     description: 'opens the gui'
@@ -25,3 +27,4 @@ commands:
     permission: lpgui.setup
     permission-message: 'No Permission'
     aliases: ['lpgsetup']
+

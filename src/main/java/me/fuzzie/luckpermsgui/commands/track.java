@@ -28,6 +28,8 @@ public class track implements CommandExecutor {
         if (Sender instanceof Player) {
             Player player = (Player) Sender;
 
+
+
             // List<String> rankItem = getConfig().getStringList("ranks.rank-item");
             List<String> trackName = main.getInstance().getConfig().getStringList("tracks.track-name");
             List<String> trackPrefix = main.getInstance().getConfig().getStringList("tracks.track-prefix");

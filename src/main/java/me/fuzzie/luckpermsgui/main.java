@@ -8,6 +8,8 @@ import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 import me.fuzzie.luckpermsgui.commands.lpguisetup;
 import me.fuzzie.luckpermsgui.commands.rank;
 import me.fuzzie.luckpermsgui.commands.track;
+import net.luckperms.api.LuckPerms;
+import net.luckperms.api.LuckPermsProvider;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -55,6 +57,8 @@ public final class main extends JavaPlugin {
         createCustomConfig();
 
 
+
+
         plugin = this;
     }
 
@@ -69,6 +73,7 @@ public final class main extends JavaPlugin {
 
         if (Sender instanceof Player) {
             Player player = (Player) Sender;
+
             if (args.length > 0) {
                 Player target = Bukkit.getPlayer(args[0]);
 
@@ -207,6 +212,12 @@ public final class main extends JavaPlugin {
         exit.setItemMeta(meta);
 
         return exit;
+    }
+
+    public LuckPerms getLP() throws IllegalStateException {
+        LuckPerms api = LuckPermsProvider.get();
+
+        return api;
     }
 
     public OutlinePane getBackground(int x, int y, int length, int height) {

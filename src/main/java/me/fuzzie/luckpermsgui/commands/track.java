@@ -5,6 +5,9 @@ import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 import me.fuzzie.luckpermsgui.main;
+import net.luckperms.api.context.ImmutableContextSet;
+import net.luckperms.api.model.user.User;
+import net.luckperms.api.track.Track;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -29,13 +32,14 @@ public class track implements CommandExecutor {
             Player player = (Player) Sender;
 
 
-
             // List<String> rankItem = getConfig().getStringList("ranks.rank-item");
             List<String> trackName = main.getInstance().getConfig().getStringList("tracks.track-name");
             List<String> trackPrefix = main.getInstance().getConfig().getStringList("tracks.track-prefix");
             List<String> trackItem = main.getInstance().getConfig().getStringList("tracks.track-item");
             if (args.length > 0) {
                 Player target = Bukkit.getPlayer(args[0]);
+                User user = main.getInstance().getLP().getUserManager().getUser(args[0]);
+
 
                 if (target != null) {
 
@@ -62,6 +66,14 @@ public class track implements CommandExecutor {
                     gui.addPane(footer2);
 
                     for (int i = 0; i < trackName.size(); i++) {
+                        // create a blank context
+                        ImmutableContextSet set1 = ImmutableContextSet.empty();
+
+                        // get the current track
+                        Track track = main.getInstance().getLP().getTrackManager().getTrack(trackName.get(i));
+
+
+
                         String currentTrack = trackName.get(i);
                         // create items in GUI
                         ItemStack item = new ItemStack(Material.getMaterial(trackItem.get(i)));
@@ -78,9 +90,6 @@ public class track implements CommandExecutor {
                         // add background
                         OutlinePane background = main.getInstance().getBackground(0, 0, 9, 3);
                         clickedGui.addPane(background);
-
-                        // create confirm menu
-                        ChestGui confirm = main.getInstance().getConfirm(player, target, "track","lp user " + target.getName() + motion + currentTrack);
 
                         // create body pane
                         String promoteItem = main.getInstance().getConfig().getString("tracks.promote-item");
@@ -100,10 +109,11 @@ public class track implements CommandExecutor {
                         {
                             event.setCancelled(true);
                             if (main.getInstance().getConfig().getBoolean("tracks.require-confirm") == true) {
-                                motion = " demote ";
-                                confirm.show(player);
+                                motion = "demote";
+                                ChestGui c = getConfirm(user, motion, track);
+                                c.show(player);
                             } else if (main.getInstance().getConfig().getBoolean("tracks.require-confirm") == false) {
-                                Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + target.getName() + " demote " + currentTrack);
+                                track.demote(user, set1);
                             }
                         }), 2, 0);
 
@@ -111,10 +121,11 @@ public class track implements CommandExecutor {
                         {
                             event.setCancelled(true);
                             if (main.getInstance().getConfig().getBoolean("tracks.require-confirm") == true) {
-                                motion = " promote ";
-                                confirm.show(player);
+                                motion = "promote";
+                                ChestGui c = getConfirm(user, motion, track);
+                                c.show(player);
                             } else if (main.getInstance().getConfig().getBoolean("tracks.require-confirm") == false) {
-                                Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + target.getName() + " promote " + currentTrack);
+                                track.promote(user, set1);
                             }
                         }), 6, 0);
                         clickedGui.addPane(body);
@@ -148,6 +159,8 @@ public class track implements CommandExecutor {
             } else {
                 Player target = player;
 
+                User user = main.getInstance().getLP().getUserManager().getUser(target.getName());
+
                 // create GUI
                 ChestGui gui = new ChestGui(4, (getChat(main.getInstance().getMessage().getString("track.menu-title").replace("%player%", target.getName()))));
                 OutlinePane pane = new OutlinePane(0, 0, 9, 3);
@@ -171,7 +184,14 @@ public class track implements CommandExecutor {
                 gui.addPane(footer2);
 
                 for (int i = 0; i < trackName.size(); i++) {
-                    String currentTrack = trackName.get(i);
+                    // create a blank context
+                    ImmutableContextSet set1 = ImmutableContextSet.empty();
+
+                    // get the current track
+                    Track track = main.getInstance().getLP().getTrackManager().getTrack(trackName.get(i));
+
+
+
                     // create items in GUI
                     ItemStack item = new ItemStack(Material.getMaterial(trackItem.get(i)));
                     String itemName = getChat(trackPrefix.get(i));
@@ -182,14 +202,11 @@ public class track implements CommandExecutor {
                     item.setItemMeta(meta);
 
                     // create specific GUI
-                    ChestGui clickedGui = new ChestGui(3, (getChat(main.getInstance().getMessage().getString("track.second-menu-title").replace("%player%", target.getName()).replace("%track%", itemName))));
+                    ChestGui clickedGui = new ChestGui(3, (getChat(main.getInstance().getMessage().getString("track.second-menu-title").replace("%player%", target.getName().replace("%track%", itemName)))));
 
                     // add background
                     OutlinePane background = main.getInstance().getBackground(0, 0, 9, 3);
                     clickedGui.addPane(background);
-
-                    // create confirm menu
-                    ChestGui confirm = main.getInstance().getConfirm(player, target, "track","lp user " + target.getName() + motion + currentTrack);
 
                     // create body pane
                     String promoteItem = main.getInstance().getConfig().getString("tracks.promote-item");
@@ -209,10 +226,11 @@ public class track implements CommandExecutor {
                     {
                         event.setCancelled(true);
                         if (main.getInstance().getConfig().getBoolean("tracks.require-confirm") == true) {
-                            motion = " demote ";
-                            confirm.show(player);
+                            motion = "demote";
+                            ChestGui c = getConfirm(user, motion, track);
+                            c.show(player);
                         } else if (main.getInstance().getConfig().getBoolean("tracks.require-confirm") == false) {
-                            Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + target.getName() + " demote " + currentTrack);
+                            track.demote(user, set1);
                         }
                     }), 2, 0);
 
@@ -220,10 +238,11 @@ public class track implements CommandExecutor {
                     {
                         event.setCancelled(true);
                         if (main.getInstance().getConfig().getBoolean("tracks.require-confirm") == true) {
-                            motion = " promote ";
-                            confirm.show(player);
+                            motion = "promote";
+                            ChestGui c = getConfirm(user, motion, track);
+                            c.show(player);
                         } else if (main.getInstance().getConfig().getBoolean("tracks.require-confirm") == false) {
-                            Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + target.getName() + " promote " + currentTrack);
+                            track.promote(user, set1);
                         }
                     }), 6, 0);
                     clickedGui.addPane(body);
@@ -251,9 +270,58 @@ public class track implements CommandExecutor {
 
                 gui.addPane(pane);
                 gui.show(player);
+
             }
         }
         return true;
+    }
+
+    public ChestGui getConfirm(User user, String m, Track track) {
+        ChestGui confirm = new ChestGui(1, (ChatColor.translateAlternateColorCodes('&', main.getInstance().getMessage().getString("confirm-menu.menu-title"))));
+
+        // create blank context
+        ImmutableContextSet set1 = ImmutableContextSet.empty();
+
+        // make background
+        OutlinePane backgroundConfirm = main.getInstance().getBackground(0, 0, 9, 1);
+        confirm.addPane(backgroundConfirm);
+
+        // create buttons
+        ItemStack confirmItem = new ItemStack(Material.GREEN_WOOL);
+        ItemMeta metaConfirm = confirmItem.getItemMeta();
+        metaConfirm.setDisplayName(ChatColor.translateAlternateColorCodes('&', main.getInstance().getMessage().getString("confirm-menu.confirm-button")));
+        confirmItem.setItemMeta(metaConfirm);
+
+        ItemStack deny = new ItemStack(Material.RED_WOOL);
+        ItemMeta metaDeny = deny.getItemMeta();
+        metaDeny.setDisplayName(ChatColor.translateAlternateColorCodes('&', main.getInstance().getMessage().getString("confirm-menu.deny-button")));
+        deny.setItemMeta(metaDeny);
+
+        StaticPane confirmPane = new StaticPane(0, 0, 9, 1);
+
+        confirmPane.addItem(new GuiItem(deny, event ->
+        {
+            event.setCancelled(true);
+            event.getWhoClicked().closeInventory();
+        }), 2, 0);
+
+        confirmPane.addItem(new GuiItem(confirmItem, event ->
+        {
+            event.setCancelled(true);
+            if (m.equals("demote")) {
+                track.demote(user, set1);
+            } else if (m.equals("promote")) {
+                track.promote(user, set1);
+            }
+
+
+            event.getWhoClicked().closeInventory();
+        }), 6, 0);
+
+
+        confirm.addPane(confirmPane);
+
+        return confirm;
     }
 
     public String getChat(String text) {

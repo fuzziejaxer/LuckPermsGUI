@@ -30,6 +30,6 @@ rank:
 
 track:
   menu-title: '&aTrack &8Menu &7: &a%player%'
-  second-menu-title: '&f%track% &7: &aTrack &8Menu &7: &a%player%'
+  second-menu-title: '%track% &7: &aTrack &8Menu &7: &a%player%'
   promote: '&a&lPromote'
   demote: '&c&lDemote'

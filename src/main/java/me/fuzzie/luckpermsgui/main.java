@@ -5,7 +5,6 @@ import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
 import com.github.stefvanschie.inventoryframework.pane.Pane;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
-import me.fuzzie.luckpermsgui.commands.lpguisetup;
 import me.fuzzie.luckpermsgui.commands.rank;
 import me.fuzzie.luckpermsgui.commands.track;
 import net.luckperms.api.LuckPerms;
@@ -49,9 +48,7 @@ public final class main extends JavaPlugin {
         if(getConfig().getBoolean("tracks.enabled") == true) {
             this.getCommand("track").setExecutor(new track());
         }
-        if(getConfig().getBoolean("setup.enabled") == true){
-            this.getCommand("lpguisetup").setExecutor(new lpguisetup());
-        }
+
 
         // creates messages.yml file
         createCustomConfig();
@@ -94,18 +91,6 @@ public final class main extends JavaPlugin {
                         event.setCancelled(true);
                         player.performCommand("rank " + target.getName());
                     }), 3, 1);
-
-                    // create setup item
-                    ItemStack setup = new ItemStack(Material.BRICKS);
-                    ItemMeta setupMeta = setup.getItemMeta();
-                    setupMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', getMessage().getString("lpgui.setup-button")));
-                    setup.setItemMeta(setupMeta);
-
-                    pane.addItem(new GuiItem(setup, event ->
-                    {
-                        event.setCancelled(true);
-                        player.performCommand("lpguisetup");
-                    }), 4, 1);
 
                     // create track menu item
                     ItemStack track = new ItemStack(Material.LADDER);
@@ -157,18 +142,6 @@ public final class main extends JavaPlugin {
                     event.setCancelled(true);
                     player.performCommand("rank " + target.getName());
                 }), 3, 1);
-
-                // create setup item
-                ItemStack setup = new ItemStack(Material.BRICKS);
-                ItemMeta setupMeta = setup.getItemMeta();
-                setupMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', getMessage().getString("lpgui.setup-button")));
-                setup.setItemMeta(setupMeta);
-
-                pane.addItem(new GuiItem(setup, event ->
-                {
-                    event.setCancelled(true);
-                    player.performCommand("lpguisetup");
-                }), 4, 1);
 
                 // create track menu item
                 ItemStack track = new ItemStack(Material.LADDER);

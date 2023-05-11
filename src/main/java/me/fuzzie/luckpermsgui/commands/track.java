@@ -31,8 +31,6 @@ public class track implements CommandExecutor {
         if (Sender instanceof Player) {
             Player player = (Player) Sender;
 
-
-            // List<String> rankItem = getConfig().getStringList("ranks.rank-item");
             List<String> trackName = main.getInstance().getConfig().getStringList("tracks.track-name");
             List<String> trackPrefix = main.getInstance().getConfig().getStringList("tracks.track-prefix");
             List<String> trackItem = main.getInstance().getConfig().getStringList("tracks.track-item");
@@ -72,9 +70,6 @@ public class track implements CommandExecutor {
                         // get the current track
                         Track track = main.getInstance().getLP().getTrackManager().getTrack(trackName.get(i));
 
-
-
-                        String currentTrack = trackName.get(i);
                         // create items in GUI
                         ItemStack item = new ItemStack(Material.getMaterial(trackItem.get(i)));
                         String itemName = getChat(trackPrefix.get(i));
@@ -85,7 +80,7 @@ public class track implements CommandExecutor {
                         item.setItemMeta(meta);
 
                         // create specific GUI
-                        ChestGui clickedGui = new ChestGui(3, (getChat(main.getInstance().getMessage().getString("track.second-menu-title").replace("%player%", target.getName().replace("%track%", itemName)))));
+                        ChestGui clickedGui = new ChestGui(3, (getChat(main.getInstance().getMessage().getString("track.second-menu-title").replace("%player%", target.getName()))));
 
                         // add background
                         OutlinePane background = main.getInstance().getBackground(0, 0, 9, 3);
@@ -105,6 +100,7 @@ public class track implements CommandExecutor {
                         demote.setItemMeta(metaDemote);
 
                         StaticPane body = new StaticPane(0,1, 9, 1);
+                        int finalI = i;
                         body.addItem(new GuiItem(demote, event ->
                         {
                             event.setCancelled(true);
@@ -114,6 +110,7 @@ public class track implements CommandExecutor {
                                 c.show(player);
                             } else if (main.getInstance().getConfig().getBoolean("tracks.require-confirm") == false) {
                                 track.demote(user, set1);
+                                getChat(main.getInstance().getMessage().getString("track.demote-message").replace("%player%", target.getName()).replace("%track_name%", trackName.get(finalI)));
                             }
                         }), 2, 0);
 
@@ -126,6 +123,7 @@ public class track implements CommandExecutor {
                                 c.show(player);
                             } else if (main.getInstance().getConfig().getBoolean("tracks.require-confirm") == false) {
                                 track.promote(user, set1);
+                                getChat(main.getInstance().getMessage().getString("track.promote-message").replace("%player%", target.getName()).replace("%track_name%", trackName.get(finalI)));
                             }
                         }), 6, 0);
                         clickedGui.addPane(body);
@@ -202,7 +200,7 @@ public class track implements CommandExecutor {
                     item.setItemMeta(meta);
 
                     // create specific GUI
-                    ChestGui clickedGui = new ChestGui(3, (getChat(main.getInstance().getMessage().getString("track.second-menu-title").replace("%player%", target.getName().replace("%track%", itemName)))));
+                    ChestGui clickedGui = new ChestGui(3, (getChat(main.getInstance().getMessage().getString("track.second-menu-title").replace("%player%", target.getName()))));
 
                     // add background
                     OutlinePane background = main.getInstance().getBackground(0, 0, 9, 3);
@@ -222,6 +220,7 @@ public class track implements CommandExecutor {
                     demote.setItemMeta(metaDemote);
 
                     StaticPane body = new StaticPane(0,1, 9, 1);
+                    int finalI = i;
                     body.addItem(new GuiItem(demote, event ->
                     {
                         event.setCancelled(true);
@@ -231,8 +230,10 @@ public class track implements CommandExecutor {
                             c.show(player);
                         } else if (main.getInstance().getConfig().getBoolean("tracks.require-confirm") == false) {
                             track.demote(user, set1);
+                            getChat(main.getInstance().getMessage().getString("track.demote-message").replace("%player%", target.getName()).replace("%track_name%", trackName.get(finalI)));
                         }
                     }), 2, 0);
+
 
                     body.addItem(new GuiItem(promote, event ->
                     {
@@ -243,6 +244,7 @@ public class track implements CommandExecutor {
                             c.show(player);
                         } else if (main.getInstance().getConfig().getBoolean("tracks.require-confirm") == false) {
                             track.promote(user, set1);
+                            getChat(main.getInstance().getMessage().getString("track.promote-message").replace("%player%", target.getName()).replace("%track_name%", trackName.get(finalI)));
                         }
                     }), 6, 0);
                     clickedGui.addPane(body);
@@ -310,8 +312,10 @@ public class track implements CommandExecutor {
             event.setCancelled(true);
             if (m.equals("demote")) {
                 track.demote(user, set1);
+                getChat(main.getInstance().getMessage().getString("track.demote-message").replace("%player%", user.getUsername()).replace("%track_name%", track.getName()));
             } else if (m.equals("promote")) {
                 track.promote(user, set1);
+                getChat(main.getInstance().getMessage().getString("track.promote-message").replace("%player%", user.getUsername()).replace("%track_name%", track.getName()));
             }
 
 

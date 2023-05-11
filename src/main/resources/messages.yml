@@ -17,12 +17,6 @@ lpgui:
   setup-button: '&5Setup &8Menu'
   track-button: '&aTrack &8Menu'
 
-setup:
-  incorrect-config: '&7[&aLP&f GUI&7]&c[!] &fplease make sure the config.yml is correct'
-  menu-title: '&cGroups To Create: '
-  create-with-prefix: '&fGroup: %group_name% will be created with the prefix %prefix%'
-  create-without-prefix: '&fGroup %group_name% will be created with no prefix'
-
 rank:
   menu-title: '&cRank &8Menu &7: &a%player%'
   item-lore: '&fWill set &a%player% &fto %prefix%'
@@ -30,6 +24,8 @@ rank:
 
 track:
   menu-title: '&aTrack &8Menu &7: &a%player%'
-  second-menu-title: '%track% &7: &aTrack &8Menu &7: &a%player%'
+  second-menu-title: '&aTrack &8Menu &7: &a%player%'
   promote: '&a&lPromote'
   demote: '&c&lDemote'
+  promote-message: '&7[&aLP&f GUI&7] &fPromoted &a%player% &falong %track_name%'
+  demote-message: '&7[&aLP&f GUI&7] &fDemoted &a%player% &falong %track_name%'

@@ -54,6 +54,10 @@ public final class main extends JavaPlugin {
         createCustomConfig();
 
 
+        // Bstats
+        int pluginId = 18584;
+        Metrics metrics = new Metrics(this, pluginId);
+
 
 
         plugin = this;
@@ -220,48 +224,6 @@ public final class main extends JavaPlugin {
         });
 
         return back;
-    }
-
-
-    public ChestGui getConfirm(Player player, Player target, String backCmd, String cmd) {
-        ChestGui confirm = new ChestGui(1, (ChatColor.translateAlternateColorCodes('&', getMessage().getString("confirm-menu.menu-title"))));
-
-        OutlinePane backgroundConfirm = main.getInstance().getBackground(0, 0, 9, 1);
-        confirm.addPane(backgroundConfirm);
-
-        // create buttons
-        ItemStack confirmItem = new ItemStack(Material.GREEN_WOOL);
-        ItemMeta metaConfirm = confirmItem.getItemMeta();
-        metaConfirm.setDisplayName(ChatColor.translateAlternateColorCodes('&', getMessage().getString("confirm-menu.confirm-button")));
-        confirmItem.setItemMeta(metaConfirm);
-
-        ItemStack deny = new ItemStack(Material.RED_WOOL);
-        ItemMeta metaDeny = deny.getItemMeta();
-        metaDeny.setDisplayName(ChatColor.translateAlternateColorCodes('&', getMessage().getString("confirm-menu.deny-button")));
-        deny.setItemMeta(metaDeny);
-
-        StaticPane confirmPane = new StaticPane(0, 0, 9, 1);
-
-        confirmPane.addItem(new GuiItem(deny, event ->
-        {
-            event.setCancelled(true);
-            event.getWhoClicked().closeInventory();
-        }), 2, 0);
-
-        confirmPane.addItem(new GuiItem(confirmItem, event ->
-        {
-            event.setCancelled(true);
-            Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), cmd);
-            event.getWhoClicked().closeInventory();
-        }), 6, 0);
-
-
-
-        confirmPane.addItem(main.getInstance().backButton(player, backCmd + " " + target.getName()), 0, 0);
-
-        confirm.addPane(confirmPane);
-
-        return confirm;
     }
 
 

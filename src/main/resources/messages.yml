@@ -27,5 +27,5 @@ track:
   second-menu-title: '&aTrack &8Menu &7: &a%player%'
   promote: '&a&lPromote'
   demote: '&c&lDemote'
-  promote-message: '&7[&aLP&f GUI&7] &fPromoted &a%player% &falong %track_name%'
-  demote-message: '&7[&aLP&f GUI&7] &fDemoted &a%player% &falong %track_name%'
+  promote-message: '&7[&aLP&f GUI&7] &fPromoted &a%player% &falong &a%track_name%'
+  demote-message: '&7[&aLP&f GUI&7] &fDemoted &a%player% &falong &a%track_name%'

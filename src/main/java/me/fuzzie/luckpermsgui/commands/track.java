@@ -106,11 +106,11 @@ public class track implements CommandExecutor {
                             event.setCancelled(true);
                             if (main.getInstance().getConfig().getBoolean("tracks.require-confirm") == true) {
                                 motion = "demote";
-                                ChestGui c = getConfirm(user, motion, track);
+                                ChestGui c = getConfirm(player, user, motion, track);
                                 c.show(player);
                             } else if (main.getInstance().getConfig().getBoolean("tracks.require-confirm") == false) {
                                 track.demote(user, set1);
-                                getChat(main.getInstance().getMessage().getString("track.demote-message").replace("%player%", target.getName()).replace("%track_name%", trackName.get(finalI)));
+                                player.sendMessage(getChat(main.getInstance().getMessage().getString("track.demote-message").replace("%player%", target.getName()).replace("%track_name%", trackName.get(finalI))));
                             }
                         }), 2, 0);
 
@@ -119,11 +119,11 @@ public class track implements CommandExecutor {
                             event.setCancelled(true);
                             if (main.getInstance().getConfig().getBoolean("tracks.require-confirm") == true) {
                                 motion = "promote";
-                                ChestGui c = getConfirm(user, motion, track);
+                                ChestGui c = getConfirm(player, user, motion, track);
                                 c.show(player);
                             } else if (main.getInstance().getConfig().getBoolean("tracks.require-confirm") == false) {
                                 track.promote(user, set1);
-                                getChat(main.getInstance().getMessage().getString("track.promote-message").replace("%player%", target.getName()).replace("%track_name%", trackName.get(finalI)));
+                                player.sendMessage(getChat(main.getInstance().getMessage().getString("track.promote-message").replace("%player%", target.getName()).replace("%track_name%", trackName.get(finalI))));
                             }
                         }), 6, 0);
                         clickedGui.addPane(body);
@@ -226,11 +226,11 @@ public class track implements CommandExecutor {
                         event.setCancelled(true);
                         if (main.getInstance().getConfig().getBoolean("tracks.require-confirm") == true) {
                             motion = "demote";
-                            ChestGui c = getConfirm(user, motion, track);
+                            ChestGui c = getConfirm(player, user, motion, track);
                             c.show(player);
                         } else if (main.getInstance().getConfig().getBoolean("tracks.require-confirm") == false) {
                             track.demote(user, set1);
-                            getChat(main.getInstance().getMessage().getString("track.demote-message").replace("%player%", target.getName()).replace("%track_name%", trackName.get(finalI)));
+                            player.sendMessage(getChat(main.getInstance().getMessage().getString("track.demote-message").replace("%player%", target.getName()).replace("%track_name%", trackName.get(finalI))));
                         }
                     }), 2, 0);
 
@@ -240,11 +240,11 @@ public class track implements CommandExecutor {
                         event.setCancelled(true);
                         if (main.getInstance().getConfig().getBoolean("tracks.require-confirm") == true) {
                             motion = "promote";
-                            ChestGui c = getConfirm(user, motion, track);
+                            ChestGui c = getConfirm(player, user, motion, track);
                             c.show(player);
                         } else if (main.getInstance().getConfig().getBoolean("tracks.require-confirm") == false) {
                             track.promote(user, set1);
-                            getChat(main.getInstance().getMessage().getString("track.promote-message").replace("%player%", target.getName()).replace("%track_name%", trackName.get(finalI)));
+                            player.sendMessage(getChat(main.getInstance().getMessage().getString("track.promote-message").replace("%player%", target.getName()).replace("%track_name%", trackName.get(finalI))));
                         }
                     }), 6, 0);
                     clickedGui.addPane(body);
@@ -278,7 +278,7 @@ public class track implements CommandExecutor {
         return true;
     }
 
-    public ChestGui getConfirm(User user, String m, Track track) {
+    public ChestGui getConfirm(Player p, User user, String m, Track track) {
         ChestGui confirm = new ChestGui(1, (ChatColor.translateAlternateColorCodes('&', main.getInstance().getMessage().getString("confirm-menu.menu-title"))));
 
         // create blank context
@@ -312,10 +312,10 @@ public class track implements CommandExecutor {
             event.setCancelled(true);
             if (m.equals("demote")) {
                 track.demote(user, set1);
-                getChat(main.getInstance().getMessage().getString("track.demote-message").replace("%player%", user.getUsername()).replace("%track_name%", track.getName()));
+                p.sendMessage(getChat(main.getInstance().getMessage().getString("track.demote-message").replace("%player%", user.getUsername()).replace("%track_name%", track.getName())));
             } else if (m.equals("promote")) {
                 track.promote(user, set1);
-                getChat(main.getInstance().getMessage().getString("track.promote-message").replace("%player%", user.getUsername()).replace("%track_name%", track.getName()));
+                p.sendMessage(getChat(main.getInstance().getMessage().getString("track.promote-message").replace("%player%", user.getUsername()).replace("%track_name%", track.getName())));
             }
 
 

@@ -286,7 +286,13 @@ public class grant implements CommandExecutor {
                         gui.addPane(background);
 
                         StaticPane navigation = new StaticPane(0, 5, 9, 1);
-                        navigation.addItem(new GuiItem(new ItemStack(Material.RED_WOOL), event -> {
+
+                        ItemStack prev = new ItemStack(Material.ARROW);
+                        ItemMeta prevMeta = prev.getItemMeta();
+                        prevMeta.setDisplayName(ChatColor.RED + "Previous Page");
+                        prev.setItemMeta(prevMeta);
+
+                        navigation.addItem(new GuiItem(prev, event -> {
                             if (pages.getPage() > 0) {
                                 pages.setPage(pages.getPage() - 1);
 
@@ -296,7 +302,12 @@ public class grant implements CommandExecutor {
                             event.setCancelled(true);
                         }), 2, 0);
 
-                        navigation.addItem(new GuiItem(new ItemStack(Material.GREEN_WOOL), event -> {
+                        ItemStack next = new ItemStack(Material.ARROW);
+                        ItemMeta meta = next.getItemMeta();
+                        meta.setDisplayName(ChatColor.GREEN + "Next Page");
+                        next.setItemMeta(meta);
+
+                        navigation.addItem(new GuiItem(next, event -> {
                             if (pages.getPage() < pages.getPages() - 1) {
                                 pages.setPage(pages.getPage() + 1);
 

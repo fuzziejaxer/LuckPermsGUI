@@ -22,3 +22,8 @@ commands:
     permission: lpgui.use
     permission-message: 'No Permission'
     aliases: ['lpg']
+  grant:
+    description: 'opens permission gui'
+    permission: lpgui.grant
+    permission-message: 'No Permission'
+    aliases: ['ungrant', 'permsgui']

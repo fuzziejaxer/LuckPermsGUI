@@ -41,3 +41,9 @@ tracks:
     - 'DIAMOND'
   promote-item: 'GREEN_WOOL'
   demote-item: 'RED_WOOL'
+permissions:
+  enabled: true
+  # if the selected user is op the gui will display all permissions as red
+  permissions:
+    - 'essentials.ban'
+    - 'lpgui.reload'

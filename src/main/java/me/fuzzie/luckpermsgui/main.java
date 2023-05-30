@@ -5,6 +5,7 @@ import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
 import com.github.stefvanschie.inventoryframework.pane.Pane;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
+import me.fuzzie.luckpermsgui.commands.grant;
 import me.fuzzie.luckpermsgui.commands.rank;
 import me.fuzzie.luckpermsgui.commands.track;
 import net.luckperms.api.LuckPerms;
@@ -24,6 +25,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 
 public final class main extends JavaPlugin {
@@ -48,6 +50,9 @@ public final class main extends JavaPlugin {
         if(getConfig().getBoolean("tracks.enabled") == true) {
             this.getCommand("track").setExecutor(new track());
         }
+        if (getConfig().getBoolean("permissions.enabled") == true) {
+            this.getCommand("grant").setExecutor(new grant());
+        }
 
 
         // creates messages.yml file
@@ -57,6 +62,21 @@ public final class main extends JavaPlugin {
         // Bstats
         int pluginId = 18584;
         Metrics metrics = new Metrics(this, pluginId);
+
+        metrics.addCustomChart(new Metrics.SimplePie("numOfRanks", () -> {
+            List<String> rankName = main.getInstance().getConfig().getStringList("ranks.rank-name");
+            return String.valueOf(rankName.size());
+        }));
+
+        metrics.addCustomChart(new Metrics.SimplePie("numOfTracks", () -> {
+            List<String> trackName = main.getInstance().getConfig().getStringList("tracks.track-name");
+            return String.valueOf(trackName.size());
+        }));
+
+        metrics.addCustomChart(new Metrics.SimplePie("numOfPerms", () -> {
+            List<String> permission = main.getInstance().getConfig().getStringList("permissions.permissions");
+            return String.valueOf(permission.size());
+        }));
 
 
 
@@ -95,6 +115,18 @@ public final class main extends JavaPlugin {
                         event.setCancelled(true);
                         player.performCommand("rank " + target.getName());
                     }), 3, 1);
+
+                    // create permissions menu item
+                    ItemStack perms = new ItemStack(Material.REDSTONE);
+                    ItemMeta permsMeta = perms.getItemMeta();
+                    permsMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', getMessage().getString("lpgui.perms-button")));
+                    perms.setItemMeta(permsMeta);
+
+                    pane.addItem(new GuiItem(perms, event ->
+                    {
+                        event.setCancelled(true);
+                        player.performCommand("grant " + target.getName());
+                    }), 4, 1);
 
                     // create track menu item
                     ItemStack track = new ItemStack(Material.LADDER);
@@ -146,6 +178,18 @@ public final class main extends JavaPlugin {
                     event.setCancelled(true);
                     player.performCommand("rank " + target.getName());
                 }), 3, 1);
+
+                // create permissions menu item
+                ItemStack perms = new ItemStack(Material.REDSTONE);
+                ItemMeta permsMeta = perms.getItemMeta();
+                permsMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', getMessage().getString("lpgui.perms-button")));
+                perms.setItemMeta(permsMeta);
+
+                pane.addItem(new GuiItem(perms, event ->
+                {
+                    event.setCancelled(true);
+                    player.performCommand("grant " + target.getName());
+                }), 4, 1);
 
                 // create track menu item
                 ItemStack track = new ItemStack(Material.LADDER);

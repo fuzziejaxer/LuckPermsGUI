@@ -14,8 +14,8 @@ confirm-menu:
 lpgui:
   menu-title: '&aLuck&7Perms &eGUI'
   rank-button: '&cRank &8Menu'
-  setup-button: '&5Setup &8Menu'
   track-button: '&aTrack &8Menu'
+  perms-button: '&ePermission &8Menu'
 
 rank:
   menu-title: '&cRank &8Menu &7: &a%player%'
@@ -29,3 +29,7 @@ track:
   demote: '&c&lDemote'
   promote-message: '&7[&aLP&f GUI&7] &fPromoted &a%player% &falong &a%track_name%'
   demote-message: '&7[&aLP&f GUI&7] &fDemoted &a%player% &falong &a%track_name%'
+
+permissions:
+  menu-title: '&ePermissions &8Menu &7: &a%player%'
+  invalid-page: '&7[&aLP&f GUI&7]&c[!] &fPlease choose a page &e1 - 3'

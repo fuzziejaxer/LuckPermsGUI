@@ -48,6 +48,7 @@ public class rank implements CommandExecutor {
                         // get current rank name
                         String currentRankName = rankName.get(i);
 
+
                         // create confirmation menu
                         ChestGui confirm = getConfirm(player, user, "rank", rankName, i);
 

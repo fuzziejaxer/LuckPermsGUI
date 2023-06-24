@@ -24,7 +24,7 @@ repositories {
 
 dependencies {
     compileOnly 'org.spigotmc:spigot-api:1.20.1-R0.1-SNAPSHOT'
-    implementation 'com.github.stefvanschie.inventoryframework:IF:0.10.8'
+    implementation 'com.github.stefvanschie.inventoryframework:IF:0.10.11'
     compileOnly 'net.luckperms:api:5.4'
 }
 

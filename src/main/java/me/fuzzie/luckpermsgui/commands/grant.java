@@ -55,72 +55,80 @@ public class grant implements CommandExecutor {
                             for (int i = 0; i < permission.size(); i++) {
                                 int currentPage = 0;
                                 if (targetUser.getCachedData().getPermissionData().checkPermission(permission.get(i)).asBoolean() == false) {
+                                    if (main.getInstance().getConfig().getBoolean("permissions.require-permission") == false
+                                            || user.getCachedData().getPermissionData().checkPermission(permission.get(i)).asBoolean() == true &&
+                                            main.getInstance().getConfig().getBoolean("permissions.require-permission") == true) {
+
+                                        ItemStack item = new ItemStack(Material.LIME_CONCRETE);
+                                        ItemMeta meta = item.getItemMeta();
+                                        meta.setDisplayName(ChatColor.GREEN + permission.get(i));
+                                        item.setItemMeta(meta);
 
 
-                                    ItemStack item = new ItemStack(Material.LIME_CONCRETE);
-                                    ItemMeta meta = item.getItemMeta();
-                                    meta.setDisplayName(ChatColor.GREEN + permission.get(i));
-                                    item.setItemMeta(meta);
+                                        int finalI = i;
+                                        GuiItem guiItem = new GuiItem(item);
 
 
-                                    int finalI = i;
-                                    GuiItem guiItem = new GuiItem(item);
-
-
-                                    if (i > 44) {
-                                        if (i > 89) {
-                                            pane3.addItem(guiItem);
-                                            currentPage = 3;
+                                        if (i > 44) {
+                                            if (i > 89) {
+                                                pane3.addItem(guiItem);
+                                                currentPage = 3;
+                                            } else {
+                                                pane2.addItem(guiItem);
+                                                currentPage = 2;
+                                            }
                                         } else {
-                                            pane2.addItem(guiItem);
-                                            currentPage = 2;
+                                            pane.addItem(guiItem);
+                                            currentPage = 1;
                                         }
-                                    } else {
-                                        pane.addItem(guiItem);
-                                        currentPage = 1;
+
+                                        int finalCurrentPage = currentPage;
+                                        guiItem.setAction(event -> {
+                                            event.setCancelled(true);
+                                            DataMutateResult result = targetUser.data().add(Node.builder(permission.get(finalI)).build());
+                                            main.getInstance().getLP().getUserManager().saveUser(targetUser);
+
+                                            player.performCommand("grant " + target.getName() + " " + finalCurrentPage);
+                                        });
+
                                     }
-
-                                    int finalCurrentPage = currentPage;
-                                    guiItem.setAction(event -> {
-                                        event.setCancelled(true);
-                                        DataMutateResult result = targetUser.data().add(Node.builder(permission.get(finalI)).build());
-                                        main.getInstance().getLP().getUserManager().saveUser(targetUser);
-
-                                        player.performCommand("grant " + target.getName() + " " + finalCurrentPage);
-                                    });
-
-
                                 } else if (targetUser.getCachedData().getPermissionData().checkPermission(permission.get(i)).asBoolean() == true) {
 
-                                    ItemStack item = new ItemStack(Material.RED_CONCRETE);
-                                    ItemMeta meta = item.getItemMeta();
-                                    meta.setDisplayName(ChatColor.RED + permission.get(i));
-                                    item.setItemMeta(meta);
+                                    if (main.getInstance().getConfig().getBoolean("permissions.require-permission") == false
+                                            || user.getCachedData().getPermissionData().checkPermission(permission.get(i)).asBoolean() == true &&
+                                            main.getInstance().getConfig().getBoolean("permissions.require-permission") == true) {
 
-                                    int finalI = i;
-                                    GuiItem guiItem = new GuiItem(item);
+                                        ItemStack item = new ItemStack(Material.RED_CONCRETE);
+                                        ItemMeta meta = item.getItemMeta();
+                                        meta.setDisplayName(ChatColor.RED + permission.get(i));
+                                        item.setItemMeta(meta);
 
-                                    if (i > 44) {
-                                        if (i > 89) {
-                                            pane3.addItem(guiItem);
-                                            currentPage = 3;
+                                        int finalI = i;
+                                        GuiItem guiItem = new GuiItem(item);
+
+                                        if (i > 44) {
+                                            if (i > 89) {
+                                                pane3.addItem(guiItem);
+                                                currentPage = 3;
+                                            } else {
+                                                pane2.addItem(guiItem);
+                                                currentPage = 2;
+                                            }
                                         } else {
-                                            pane2.addItem(guiItem);
-                                            currentPage = 2;
+                                            pane.addItem(guiItem);
+                                            currentPage = 1;
                                         }
-                                    } else {
-                                        pane.addItem(guiItem);
-                                        currentPage = 1;
+
+                                        int finalCurrentPage = currentPage;
+                                        guiItem.setAction(event -> {
+                                            event.setCancelled(true);
+                                            DataMutateResult result = targetUser.data().remove(Node.builder(permission.get(finalI)).build());
+                                            main.getInstance().getLP().getUserManager().saveUser(targetUser);
+
+                                            player.performCommand("grant " + target.getName() + " " + finalCurrentPage);
+                                        });
+
                                     }
-
-                                    int finalCurrentPage = currentPage;
-                                    guiItem.setAction(event -> {
-                                        event.setCancelled(true);
-                                        DataMutateResult result = targetUser.data().remove(Node.builder(permission.get(finalI)).build());
-                                        main.getInstance().getLP().getUserManager().saveUser(targetUser);
-
-                                        player.performCommand("grant " + target.getName() + " " + finalCurrentPage);
-                                    });
 
                                 }
 
@@ -204,72 +212,81 @@ public class grant implements CommandExecutor {
                         for (int i = 0; i < permission.size(); i++) {
                             int currentPage = 0;
                             if (targetUser.getCachedData().getPermissionData().checkPermission(permission.get(i)).asBoolean() == false) {
+                                if (main.getInstance().getConfig().getBoolean("permissions.require-permission") == false
+                                        || user.getCachedData().getPermissionData().checkPermission(permission.get(i)).asBoolean() == true &&
+                                        main.getInstance().getConfig().getBoolean("permissions.require-permission") == true) {
+
+                                    ItemStack item = new ItemStack(Material.LIME_CONCRETE);
+                                    ItemMeta meta = item.getItemMeta();
+                                    meta.setDisplayName(ChatColor.GREEN + permission.get(i));
+                                    item.setItemMeta(meta);
 
 
-                                ItemStack item = new ItemStack(Material.LIME_CONCRETE);
-                                ItemMeta meta = item.getItemMeta();
-                                meta.setDisplayName(ChatColor.GREEN + permission.get(i));
-                                item.setItemMeta(meta);
+                                    int finalI = i;
+                                    GuiItem guiItem = new GuiItem(item);
 
 
-                                int finalI = i;
-                                GuiItem guiItem = new GuiItem(item);
-
-
-                                if (i > 44) {
-                                    if (i > 89) {
-                                        pane3.addItem(guiItem);
-                                        currentPage = 3;
+                                    if (i > 44) {
+                                        if (i > 89) {
+                                            pane3.addItem(guiItem);
+                                            currentPage = 3;
+                                        } else {
+                                            pane2.addItem(guiItem);
+                                            currentPage = 2;
+                                        }
                                     } else {
-                                        pane2.addItem(guiItem);
-                                        currentPage = 2;
+                                        pane.addItem(guiItem);
+                                        currentPage = 1;
                                     }
-                                } else {
-                                    pane.addItem(guiItem);
-                                    currentPage = 1;
+
+                                    int finalCurrentPage = currentPage;
+                                    guiItem.setAction(event -> {
+                                        event.setCancelled(true);
+                                        DataMutateResult result = targetUser.data().add(Node.builder(permission.get(finalI)).build());
+                                        main.getInstance().getLP().getUserManager().saveUser(targetUser);
+
+                                        player.performCommand("grant " + target.getName() + " " + finalCurrentPage);
+                                    });
+
                                 }
-
-                                int finalCurrentPage = currentPage;
-                                guiItem.setAction(event -> {
-                                    event.setCancelled(true);
-                                    DataMutateResult result = targetUser.data().add(Node.builder(permission.get(finalI)).build());
-                                    main.getInstance().getLP().getUserManager().saveUser(targetUser);
-
-                                    player.performCommand("grant " + target.getName() + " " + finalCurrentPage);
-                                });
-
 
                             } else if (targetUser.getCachedData().getPermissionData().checkPermission(permission.get(i)).asBoolean() == true) {
 
-                                ItemStack item = new ItemStack(Material.RED_CONCRETE);
-                                ItemMeta meta = item.getItemMeta();
-                                meta.setDisplayName(ChatColor.RED + permission.get(i));
-                                item.setItemMeta(meta);
+                                if (main.getInstance().getConfig().getBoolean("permissions.require-permission") == false
+                                        || user.getCachedData().getPermissionData().checkPermission(permission.get(i)).asBoolean() == true &&
+                                        main.getInstance().getConfig().getBoolean("permissions.require-permission") == true) {
 
-                                int finalI = i;
-                                GuiItem guiItem = new GuiItem(item);
+                                    ItemStack item = new ItemStack(Material.RED_CONCRETE);
+                                    ItemMeta meta = item.getItemMeta();
+                                    meta.setDisplayName(ChatColor.RED + permission.get(i));
+                                    item.setItemMeta(meta);
 
-                                if (i > 44) {
-                                    if (i > 89) {
-                                        pane3.addItem(guiItem);
-                                        currentPage = 3;
+                                    int finalI = i;
+                                    GuiItem guiItem = new GuiItem(item);
+
+                                    if (i > 44) {
+                                        if (i > 89) {
+                                            pane3.addItem(guiItem);
+                                            currentPage = 3;
+                                        } else {
+                                            pane2.addItem(guiItem);
+                                            currentPage = 2;
+                                        }
                                     } else {
-                                        pane2.addItem(guiItem);
-                                        currentPage = 2;
+                                        pane.addItem(guiItem);
+                                        currentPage = 1;
                                     }
-                                } else {
-                                    pane.addItem(guiItem);
-                                    currentPage = 1;
+
+                                    int finalCurrentPage = currentPage;
+                                    guiItem.setAction(event -> {
+                                        event.setCancelled(true);
+                                        DataMutateResult result = targetUser.data().remove(Node.builder(permission.get(finalI)).build());
+                                        main.getInstance().getLP().getUserManager().saveUser(targetUser);
+
+                                        player.performCommand("grant " + target.getName() + " " + finalCurrentPage);
+                                    });
+
                                 }
-
-                                int finalCurrentPage = currentPage;
-                                guiItem.setAction(event -> {
-                                    event.setCancelled(true);
-                                    DataMutateResult result = targetUser.data().remove(Node.builder(permission.get(finalI)).build());
-                                    main.getInstance().getLP().getUserManager().saveUser(targetUser);
-
-                                    player.performCommand("grant " + target.getName() + " " + finalCurrentPage);
-                                });
 
                             }
 

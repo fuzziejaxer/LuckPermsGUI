@@ -43,7 +43,8 @@ tracks:
   demote-item: 'RED_WOOL'
 permissions:
   enabled: true
-  # if the selected user is op the gui will display all permissions as red
+  require-permission: false
+  # when true, the gui will only show permissions the viewing player has.
   permissions:
     - 'essentials.ban'
     - 'lpgui.reload'

@@ -45,8 +45,6 @@ public class rank implements CommandExecutor {
                     OutlinePane pane = new OutlinePane(0, 0, 9, 4);
 
                     for (int i = 0; i < rankName.size(); i++) {
-                        // get current rank name
-                        String currentRankName = rankName.get(i);
 
 
                         // create confirmation menu
